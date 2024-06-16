@@ -13,7 +13,7 @@ class renderer {
     raylib::Model tower;
 
     renderer();
-    void render(rm::game_manager &gm);
+    void render(rm::game_manager &gm, float dt);
 };
 
 } // namespace rm

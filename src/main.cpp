@@ -16,7 +16,7 @@ int main() {
         auto dt = GetFrameTime();
         gm.update(dt);
 
-        rend.render(gm);
+        rend.render(gm, dt);
     }
 
     return 0;

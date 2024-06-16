@@ -4,8 +4,8 @@
 #include <raylib-cpp.hpp>
 #include <iostream>
 
-raylib::Vector3 toVec3(rm::Vector3 v) {
-    return raylib::Vector3(v.x, v.y, v.z);
+Matrix toMatrix(Vector3 pos, Quaternion rot, Vector3 scale) {
+    return Matrix();
 }
 
 rm::renderer::renderer() {
@@ -14,7 +14,7 @@ rm::renderer::renderer() {
     tower = raylib::Model("res/control.glb");
 }
 
-void rm::renderer::render(game_manager &gm) {
+void rm::renderer::render(game_manager &gm, float dt) {
     BeginDrawing();
     ClearBackground(BLACK);
     raylib::Color g(DARKGRAY);
@@ -22,10 +22,24 @@ void rm::renderer::render(game_manager &gm) {
 
     gm.camera.cam.BeginMode();
 
-    plane.Draw(toVec3(gm.plane.pos), 1.0f, RAYWHITE);
+
+    DrawPlane(Vector3{0,0,0}, Vector2{ 1000.0, 1000.0 }, DARKBROWN);
+
+
+    plane.transform = raylib::Matrix()
+        .RotateXYZ(gm.plane.rot);
+
+    // Arrgh! Ok, no. Need to have the MODEL matrix available to Plane.
+    auto v = Vector3Transform((Vector3){0,0,gm.plane.speed*dt}, plane.transform);
+    gm.plane.pos +=v;
+
+
+    // plane.transform = toMatrix(gm.plane.pos, gm.plane.rot, gm.plane.scale);
+    //    plane.transform = MatrixRotateXYZ((raylib::Vector3){ DEG2RAD*0.0, DEG2RAD*gm.plane.yaw, DEG2RAD*gm.plane.roll });
+    plane.Draw(gm.plane.pos, 1.0f, RAYWHITE);
 
     for (const auto &t : gm.towers) {
-        tower.Draw(toVec3(t.pos), 1.0f, RAYWHITE);
+        tower.Draw(t.pos, 1.0f, RAYWHITE);
     }
 
 

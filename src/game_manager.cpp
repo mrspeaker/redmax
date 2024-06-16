@@ -1,5 +1,6 @@
 #include <game_manager.hpp>
 #include <iostream>
+#include <raylib-cpp.hpp>
 
 rm::game_manager::game_manager() {
     for (int j = 0; j < 3; j++) {
@@ -14,10 +15,39 @@ rm::game_manager::game_manager() {
 };
 
 void rm::game_manager::update(float dt) {
-    plane.pos.z += 10.f * dt;
-    if (plane.pos.z > 60.0) {
-        plane.pos.z = -60.0;
+    auto xo = GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_X);
+    auto yo = GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_Y);
+
+    auto yaw = plane.rot.y;
+    auto roll = plane.rot.z;
+
+    const auto rot_speed = 1.0f * dt;
+    auto yawo = 0.0;
+    if (IsKeyDown(KEY_LEFT)||xo < -0.5) yawo += rot_speed;
+    else if (IsKeyDown(KEY_RIGHT)||xo > 0.5) yawo -= rot_speed;
+
+    yaw += yawo;
+
+    const auto roll_speed = 0.5f;
+    if (yawo > 0) {
+        if (roll > -1.0) {
+            roll -= (roll_speed * roll > 0 ? 2 : 1) * dt;
+        }
     }
+    else if (yawo < 0) {
+        if (roll < 1.0) {
+            roll += (roll_speed * roll < 0 ? 2 : 1) * dt;
+        }
+    }
+    else {
+        if (roll > 0.0f) roll -= 0.5f * dt;
+        else if (roll < 0.0f) roll += 0.5f * dt;
+    }
+
+    plane.rot.y = yaw;
+    plane.rot.z = roll;
+    plane.speed = 20;
+    //plane.pos.z += 20*
     camera.cam.position.x = plane.pos.x;
     camera.cam.position.z = plane.pos.z - 50;
     camera.cam.target.x = plane.pos.x;

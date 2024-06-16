@@ -1,13 +1,16 @@
 #ifndef TOWER_H
 #define TOWER_H
 
-#include <vector.hpp>
+#include <Vector3.hpp>
 
 namespace rm {
 
 class tower {
 public:
-    rm::Vector3 pos;
+    raylib::Vector3 pos;
+    raylib::Vector3 rot;
+    raylib::Vector3 scale;
+
     tower();
 };
 
