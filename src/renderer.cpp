@@ -11,12 +11,21 @@ rm::renderer::renderer() {
     copse = raylib::Model("res/copse.glb");
     mountain = raylib::Model("res/mountain.glb");
 
-    //    shader = raylib::Shader("res/lighting.vs", "res/lighting.fs");
-    //Light lights[MAX_LIGHTS] = { 0 };
-    //lights[0] =mo
+    auto mesh = GenMeshPlane(100.0, 100.0, 10, 10);
+    /*for (int i = 0; i < 121; i++) {
+        mesh.vertices[i * 3 + 1] += GetRandomValue(-20, 20) / 5.0;
+    }
+    UpdateMeshBuffer(
+                     mesh,
+                     0,
+                     mesh.vertices,
+                     mesh.vertexCount*3*sizeof(float),
+                     0);*/
+    grid = LoadModelFromMesh(mesh);
+
 }
 
-const Color pal[] ={BROWN, DARKBROWN, RED};
+const Color pal[] ={BROWN, DARKBROWN, DARKGREEN};
 
 void rm::renderer::render(game_manager &gm, float dt, raylib::Shader &shader) {
     BeginDrawing();
@@ -24,17 +33,6 @@ void rm::renderer::render(game_manager &gm, float dt, raylib::Shader &shader) {
     raylib::Color g(DARKGRAY);
 
     gm.camera.cam.BeginMode();
-
-    // ground
-    for (const auto ch : gm.terrain.chunks) {
-        auto ch_pos = Vector3{
-                ch.x * 100.0f,
-                0,
-                ch.z * 100.0f
-        };
-        DrawPlane(ch_pos, Vector2{ 99.0, 99.0 },
-            pal[ch.col]);
-    }
 
     shader.BeginMode();
 
@@ -45,6 +43,7 @@ void rm::renderer::render(game_manager &gm, float dt, raylib::Shader &shader) {
                 0,
                 ch.z * 100.0f
         };
+        grid.Draw(ch_pos, 1.0f, pal[ch.col]);
         for (const auto p : ch.trees) {
             copse.Draw(Vector3Add(ch_pos,p), 1.0f, RAYWHITE);
         }

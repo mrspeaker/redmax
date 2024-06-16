@@ -14,7 +14,7 @@ class renderer {
     raylib::Model copse;
     raylib::Model mountain;
 
-    //raylib::Shader *shader; // = raylib::Shader("res/lighting.vs", "res/lighting.fs");
+    raylib::Model grid;
 
     renderer();
     void render(rm::game_manager &gm, float dt, raylib::Shader &shader);

@@ -49,8 +49,6 @@ int main() {
         auto dt = GetFrameTime();
         gm.update(dt);
 
-
-    
         //light.position.x = gm.plane.pos.x;
         //light.position.z = gm.plane.pos.z;
         //UpdateLightValues(shader, light);

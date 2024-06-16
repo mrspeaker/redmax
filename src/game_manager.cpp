@@ -12,6 +12,7 @@ rm::game_manager::game_manager() {
             towers.push_back(t);
         }
     }
+    plane.pos.x += 20.0;
 };
 
 void rm::game_manager::update(float dt) {
@@ -27,6 +28,8 @@ void rm::game_manager::update(float dt) {
 
     camera.cam.position.x = plane.pos.x;
     camera.cam.position.z = plane.pos.z - 50;
+    camera.cam.position.y = (plane.speed + 10) / 30.0 * 200.0;
     camera.cam.target.x = plane.pos.x;
     camera.cam.target.z = plane.pos.z;
+
 }
