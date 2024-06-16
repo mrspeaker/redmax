@@ -8,6 +8,7 @@ namespace rm {
 
 class plane {
 public:
+    raylib::Matrix transform;
     raylib::Vector3 pos;
     raylib::Vector3 rot;
     raylib::Vector3 scale;
@@ -15,6 +16,7 @@ public:
     float speed;
 
     plane();
+    void update(float dt, bool is_left, bool is_right, bool is_up, bool is_down);
 };
 
 } // namespace rm
