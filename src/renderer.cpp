@@ -12,7 +12,10 @@ rm::renderer::renderer() {
     text_col = raylib::Color::Black();
     plane = raylib::Model("res/biplane.glb");
     tower = raylib::Model("res/control.glb");
+    copse = raylib::Model("res/copse.glb");
 }
+
+const Color pal[] ={BROWN, DARKBROWN, RED};
 
 void rm::renderer::render(game_manager &gm, float dt) {
     BeginDrawing();
@@ -22,7 +25,18 @@ void rm::renderer::render(game_manager &gm, float dt) {
     gm.camera.cam.BeginMode();
 
     // ground
-    DrawPlane(Vector3{0,0,0}, Vector2{ 1000.0, 1000.0 }, DARKBROWN);
+    for (const auto ch : gm.terrain.chunks) {
+        auto ch_pos = Vector3{
+                ch.x * 100.0f,
+                0,
+                ch.z * 100.0f
+        };
+        DrawPlane(ch_pos, Vector2{ 99.0, 99.0 },
+            pal[ch.col]);
+        for (const auto p : ch.trees) {
+            copse.Draw(Vector3Add(ch_pos,p), 1.0f, RAYWHITE);
+        }
+    }
 
     plane.transform = gm.plane.transform;
 

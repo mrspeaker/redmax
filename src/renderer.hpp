@@ -11,6 +11,7 @@ class renderer {
     raylib::Color text_col;    
     raylib::Model plane;
     raylib::Model tower;
+    raylib::Model copse;
 
     renderer();
     void render(rm::game_manager &gm, float dt);
