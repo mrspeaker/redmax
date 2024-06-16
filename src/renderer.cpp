@@ -4,20 +4,21 @@
 #include <raylib-cpp.hpp>
 #include <iostream>
 
-Matrix toMatrix(Vector3 pos, Quaternion rot, Vector3 scale) {
-    return Matrix();
-}
-
 rm::renderer::renderer() {
     text_col = raylib::Color::Black();
     plane = raylib::Model("res/biplane.glb");
     tower = raylib::Model("res/control.glb");
     copse = raylib::Model("res/copse.glb");
+    mountain = raylib::Model("res/mountain.glb");
+
+    //    shader = raylib::Shader("res/lighting.vs", "res/lighting.fs");
+    //Light lights[MAX_LIGHTS] = { 0 };
+    //lights[0] =mo
 }
 
 const Color pal[] ={BROWN, DARKBROWN, RED};
 
-void rm::renderer::render(game_manager &gm, float dt) {
+void rm::renderer::render(game_manager &gm, float dt, raylib::Shader &shader) {
     BeginDrawing();
     ClearBackground(BLACK);
     raylib::Color g(DARKGRAY);
@@ -33,10 +34,23 @@ void rm::renderer::render(game_manager &gm, float dt) {
         };
         DrawPlane(ch_pos, Vector2{ 99.0, 99.0 },
             pal[ch.col]);
+    }
+
+    shader.BeginMode();
+
+    // ground
+    for (const auto ch : gm.terrain.chunks) {
+        auto ch_pos = Vector3{
+                ch.x * 100.0f,
+                0,
+                ch.z * 100.0f
+        };
         for (const auto p : ch.trees) {
             copse.Draw(Vector3Add(ch_pos,p), 1.0f, RAYWHITE);
         }
     }
+
+    mountain.Draw(Vector3{0.0, 1.0, 200.0}, 1.0f, RAYWHITE);
 
     plane.transform = gm.plane.transform;
 
@@ -49,6 +63,7 @@ void rm::renderer::render(game_manager &gm, float dt) {
         tower.Draw(t.pos, 1.0f, RAYWHITE);
     }
 
+    shader.EndMode();
     gm.camera.cam.EndMode();
 
     // ui
