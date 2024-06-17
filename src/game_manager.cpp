@@ -24,7 +24,9 @@ void rm::game_manager::update(float dt) {
     auto is_up = IsKeyDown(KEY_W) || IsKeyDown(KEY_UP) || yo < -0.5;
     auto is_down = IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN) || yo > 0.5;
 
-    plane.update(dt, is_left, is_right, is_up, is_down);
+    auto is_action = IsKeyDown(KEY_SPACE);
+
+    plane.update(dt, is_left, is_right, is_up, is_down, is_action);
 
     const auto size = 300.0;
     if (plane.pos.x < -size) plane.pos.x += size * 2.0;

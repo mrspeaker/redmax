@@ -19,6 +19,8 @@ int main() {
 
     raylib::Shader shader("res/lighting.vs", "res/lighting.fs");
 
+    Texture2D tex = LoadTexture("res/terrain.png");
+
     /*auto ambientLoc = GetShaderLocation(shader, "ambient");
     std::cout<<ambientLoc<<"\n";
     float v[4] = { 0.5f, 0.5f, 0.5f, 1.0f };
@@ -36,6 +38,7 @@ int main() {
     for (int i = 0; i < rend.mountain.materialCount; i++) {
         rend.mountain.materials[i].shader = shader;
     }
+    rend.grid.materials[0].maps[0].texture = tex;
 
     auto light = CreateLight(
                              LIGHT_DIRECTIONAL,

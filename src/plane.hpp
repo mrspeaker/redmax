@@ -16,7 +16,7 @@ public:
     float speed;
 
     plane();
-    void update(float dt, bool is_left, bool is_right, bool is_up, bool is_down);
+    void update(float dt, bool is_left, bool is_right, bool is_up, bool is_down, bool is_action);
 };
 
 } // namespace rm

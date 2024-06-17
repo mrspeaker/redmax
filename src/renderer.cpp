@@ -24,8 +24,8 @@ rm::renderer::renderer() {
                      mesh.vertices,
                      mesh.vertexCount*3*sizeof(float),
                      0);*/
-    grid = LoadModelFromMesh(mesh);
 
+    grid = LoadModelFromMesh(mesh);
 }
 
 const Color pal[] ={BROWN, DARKBROWN, DARKGREEN};
