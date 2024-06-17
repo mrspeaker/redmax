@@ -12,9 +12,12 @@ rm::renderer::renderer() {
     mountain = raylib::Model("res/mountain.glb");
 
     auto mesh = GenMeshPlane(100.0, 100.0, 10, 10);
-    /*for (int i = 0; i < 121; i++) {
-        mesh.vertices[i * 3 + 1] += GetRandomValue(-20, 20) / 5.0;
+    /*for (int z = 1; z < 9; z++) {
+        for (int x = 1; x < 9; x++) {
+            mesh.vertices[(z * 10 + x) * 3 + 1] += GetRandomValue(-20, 20) / 5.0;
+        }
     }
+
     UpdateMeshBuffer(
                      mesh,
                      0,
@@ -54,7 +57,7 @@ void rm::renderer::render(game_manager &gm, float dt, raylib::Shader &shader) {
     plane.transform = gm.plane.transform;
 
     // shadow
-    plane.Draw(Vector3{gm.plane.pos.x, 0.0, gm.plane.pos.z}, 1.0f, BLACK);
+    plane.Draw(Vector3{gm.plane.pos.x, 0.0, gm.plane.pos.z}, 0.8f, BLACK);
     plane.Draw(gm.plane.pos, 1.0f, RAYWHITE);
 
     // towers
