@@ -38,6 +38,8 @@ int main() {
     for (int i = 0; i < rend.mountain.materialCount; i++) {
         rend.mountain.materials[i].shader = shader;
     }
+    rend.mountain.materials[1].maps[0].texture = tex;
+    rend.grid.materials[0].shader = shader;
     rend.grid.materials[0].maps[0].texture = tex;
 
     auto light = CreateLight(

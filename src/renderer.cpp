@@ -11,13 +11,12 @@ rm::renderer::renderer() {
     copse = raylib::Model("res/copse.glb");
     mountain = raylib::Model("res/mountain.glb");
 
-    auto mesh = GenMeshPlane(100.0, 100.0, 10, 10);
+    auto mesh = GenMeshPlane(100.0, 100.0, 16, 16);
     /*for (int z = 1; z < 9; z++) {
         for (int x = 1; x < 9; x++) {
             mesh.vertices[(z * 10 + x) * 3 + 1] += GetRandomValue(-20, 20) / 5.0;
         }
     }
-
     UpdateMeshBuffer(
                      mesh,
                      0,
@@ -28,7 +27,7 @@ rm::renderer::renderer() {
     grid = LoadModelFromMesh(mesh);
 }
 
-const Color pal[] ={BROWN, DARKBROWN, DARKGREEN};
+const Color pal[] ={BROWN, DARKBROWN, WHITE, DARKGREEN};
 
 void rm::renderer::render(game_manager &gm, float dt, raylib::Shader &shader) {
     BeginDrawing();
