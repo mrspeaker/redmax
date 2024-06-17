@@ -7,8 +7,8 @@ rm::game_manager::game_manager() {
         for (int i = 0; i < 4; i++) {
             rm::tower t{};
             t.pos.y = 0.1f;
-            t.pos.x = (j - 1) * 40.0f;
-            t.pos.z = (i - 2) * 65.0f + 35.0f;
+            t.pos.x = (j - 1) * 180.0f;
+            t.pos.z = (i - 2) * 185.0f;
             towers.push_back(t);
         }
     }
@@ -25,6 +25,12 @@ void rm::game_manager::update(float dt) {
     auto is_down = IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN) || yo > 0.5;
 
     plane.update(dt, is_left, is_right, is_up, is_down);
+
+    const auto size = 300.0;
+    if (plane.pos.x < -size) plane.pos.x += size * 2.0;
+    if (plane.pos.x > size) plane.pos.x -= size * 2.0;
+    if (plane.pos.z < -size) plane.pos.z += size * 2.0;
+    if (plane.pos.z > size) plane.pos.z -= size * 2.0;
 
     camera.cam.position.x = plane.pos.x;
     camera.cam.position.z = plane.pos.z - 50;

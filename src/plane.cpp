@@ -75,7 +75,7 @@ void rm::plane::update(float dt, bool is_left, bool is_right, bool is_up, bool i
 
     if (pos.y <= ground) pos.y = ground;
     if (speed <= 0.0) speed = 0.0;
-    if (falling && speed < 10.0) speed = 10.0;
+    if (falling && speed < 5.0) speed = 10.0;
     if (speed >= max_speed) speed = max_speed;
 
     auto vel = speed;

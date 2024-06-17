@@ -4,7 +4,7 @@
 #import <iostream>
 
 rm::terrain::terrain() {
-    const auto size = 2;
+    const auto size = 4;
     for (int j = -size; j <= size; j++) {
         for (int i = -size; i <= size; i++) {
             rm::chunk ch{};
