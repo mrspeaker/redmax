@@ -24,6 +24,25 @@ rm::renderer::renderer() {
                      mesh.vertexCount*3*sizeof(float),
                      0);*/
 
+    auto resZ = 17;
+    auto resX = 17;
+    for (int v = 0; v < resZ; v++) {
+        for (int u = 0; u < resX; u++) {
+            int i = (v * resZ + u) * 2;
+            int uu = u % 3;
+            int vv = v % 3;
+            mesh.texcoords[i] = (float)uu/(resX - 1);
+            mesh.texcoords[i + 1] = (float)vv/(resZ - 1);
+        }
+    }
+
+    UpdateMeshBuffer(
+                     mesh,
+                     1,
+                     mesh.texcoords,
+                     mesh.vertexCount*2*sizeof(float),
+                     0);
+
     grid = LoadModelFromMesh(mesh);
 }
 
