@@ -1,8 +1,7 @@
 #ifndef PLANE_H
 #define PLANE_H
 
-#include <Matrix.hpp>
-#include <Vector3.hpp>
+#include <raylib-cpp.hpp>
 
 namespace rm {
 
@@ -16,7 +15,7 @@ public:
     float speed;
 
     plane();
-    void update(float dt, bool is_left, bool is_right, bool is_up, bool is_down, bool is_action);
+    void update(float dt, bool is_left, bool is_right, bool is_up, bool is_down);
 };
 
 } // namespace rm

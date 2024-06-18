@@ -6,7 +6,7 @@ rm::plane::plane() {
     speed = 0.0;
 }
 
-void rm::plane::update(float dt, bool is_left, bool is_right, bool is_up, bool is_down, bool is_action) {
+void rm::plane::update(float dt, bool is_left, bool is_right, bool is_up, bool is_down) {
 
     auto yaw = rot.y;
     auto roll = rot.z;

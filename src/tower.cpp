@@ -1,5 +1,3 @@
 #include <tower.hpp>
 
-
-rm::tower::tower() {
-}
+rm::tower::tower()=default;

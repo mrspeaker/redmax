@@ -3,8 +3,8 @@
 #include <game_manager.hpp>
 #include <raylib-cpp.hpp>
 
-# define RLIGHTS_IMPLEMENTATION
-# include "./rlights.h"
+#define RLIGHTS_IMPLEMENTATION
+#include "./rlights.h"
 
 rm::renderer::renderer()
     : window(screenWidth, screenHeight, "RedMax"),
@@ -32,7 +32,7 @@ rm::renderer::renderer()
 
     Texture2D tex = LoadTexture("res/terrain.png");
 
-    //mountain.materials[1].maps[0].texture = tex;
+    mountain.materials[1].maps[0].texture = tex;
 
     /*auto ambientLoc = GetShaderLocation(shader, "ambient");
     std::cout<<ambientLoc<<"\n";
@@ -86,7 +86,7 @@ rm::renderer::renderer()
                      0);*/
 
     grid = LoadModelFromMesh(mesh);
-    //grid.materials[0].shader = light_shader;
+    grid.materials[0].shader = light_shader;
     grid.materials[0].maps[0].texture = tex;
 }
 
@@ -126,10 +126,6 @@ void rm::renderer::render(game_manager &gm) {
     for (const auto &t : gm.towers) {
         tower.Draw(t.pos, 1.0f, RAYWHITE);
     }
-
-    /*light.position.x = gm.plane.pos.x;
-    light.position.z = gm.plane.pos.z;
-    UpdateLightValues(shader, light);*/
 
     light_shader.EndMode();
     gm.camera.cam.EndMode();

@@ -3,6 +3,7 @@
 
 #include <raylib-cpp.hpp>
 #include <game_manager.hpp>
+#include "./rlights.h"
 
 namespace rm {
 
@@ -15,6 +16,7 @@ public:
     raylib::Model copse;
     raylib::Model mountain;
     raylib::Model grid;
+    Light light;
 
     raylib::Shader light_shader;
 

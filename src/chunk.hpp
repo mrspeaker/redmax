@@ -8,10 +8,10 @@ namespace rm {
 
 class chunk {
  public:
+    int col;
     float x;
     float z;
-    int col;
-    std::vector<int> tiles;
+    //std::vector<int> tiles;
     std::vector<raylib::Vector3> trees;
     chunk();
 };
