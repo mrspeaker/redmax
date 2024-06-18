@@ -11,26 +11,33 @@ rm::renderer::renderer() {
     copse = raylib::Model("res/copse.glb");
     mountain = raylib::Model("res/mountain.glb");
 
-    auto mesh = GenMeshPlane(100.0, 100.0, 16, 16);
-    /*for (int z = 1; z < 9; z++) {
-        for (int x = 1; x < 9; x++) {
-            mesh.vertices[(z * 10 + x) * 3 + 1] += GetRandomValue(-20, 20) / 5.0;
+    auto size = 2;
+    auto resZ = size + 1;
+    auto resX = size + 1;
+
+    auto mesh = GenMeshPlane(100.0, 100.0, size, size);
+
+    auto scale = 0.0; // amount to scale height offset by
+    for (int z = 0; z < resZ; z++) {
+        for (int x = 0; x < resX; x++) {
+            mesh.vertices[(z * resZ + x) * 3 + 1] += GetRandomValue(-20, 20) * scale;
         }
     }
+
     UpdateMeshBuffer(
                      mesh,
                      0,
                      mesh.vertices,
                      mesh.vertexCount*3*sizeof(float),
-                     0);*/
+                     0);
 
-    auto resZ = 17;
-    auto resX = 17;
+
+
     for (int v = 0; v < resZ; v++) {
         for (int u = 0; u < resX; u++) {
             int i = (v * resZ + u) * 2;
-            int uu = u % 3;
-            int vv = v % 3;
+            float uu = u % 3; //u % 2 == 0 ? 0 : 1;
+            float vv = v % 3;// v % 2 == 0 ? 0 : 1;
             mesh.texcoords[i] = (float)uu/(resX - 1);
             mesh.texcoords[i + 1] = (float)vv/(resZ - 1);
         }
