@@ -19,6 +19,7 @@ public:
     Light light;
 
     raylib::Shader light_shader;
+    raylib::Shader tile_shader;
 
     renderer();
     void render(rm::game_manager &gm);

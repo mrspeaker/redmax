@@ -8,6 +8,7 @@ in vec3 fragNormal;
 
 // Input uniform values
 uniform sampler2D texture0;
+uniform sampler2D texture1;
 uniform vec4 colDiffuse;
 
 // Output fragment color
@@ -33,7 +34,12 @@ uniform vec4 ambient;
 uniform vec3 viewPos;
 
 void main() {
-    vec4 texelColor = texture(texture0, fragTexCoord);
+    vec4 tile = texture(texture1, fragTexCoord);
+    vec2 blah = vec2(
+        mod(fragTexCoord.x,1.0/16.0)+(1./16.)*floor(tile.r*16.0),
+        mod(fragTexCoord.y,1.0/16.0)+(1./16.)*floor(tile.g*16.0)
+    );
+    vec4 texelColor = texture(texture0, blah);
     vec3 lightDot = vec3(0.0);
     vec3 normal = normalize(fragNormal);
     vec3 viewD = normalize(viewPos - fragPosition);

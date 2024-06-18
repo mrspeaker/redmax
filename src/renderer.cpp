@@ -2,6 +2,7 @@
 #include <renderer.hpp>
 #include <game_manager.hpp>
 #include <raylib-cpp.hpp>
+#include <iostream>
 
 #define RLIGHTS_IMPLEMENTATION
 #include "./rlights.h"
@@ -13,7 +14,8 @@ rm::renderer::renderer()
       tower("res/control.glb"),
       copse("res/copse.glb"),
       mountain("res/mountain.glb"),
-      light_shader("res/lighting.vs", "res/lighting.fs") {
+      light_shader("res/lighting.vs", "res/lighting.fs"),
+      tile_shader("res/lighting.vs", "res/tiles.fs") {
 
     SetConfigFlags(FLAG_MSAA_4X_HINT);
 
@@ -31,20 +33,61 @@ rm::renderer::renderer()
     }
 
     Texture2D tex = LoadTexture("res/terrain.png");
-
     mountain.materials[1].maps[0].texture = tex;
 
-    /*auto ambientLoc = GetShaderLocation(shader, "ambient");
-    std::cout<<ambientLoc<<"\n";
-    float v[4] = { 0.5f, 0.5f, 0.5f, 1.0f };
-    SetShaderValue(shader, ambientLoc, v, SHADER_UNIFORM_VEC4);*/
+    /*auto ambientLoc = GetShaderLocation(light_shader, "ambient");
+    float v[4] = { 0.0f, 150.0f,250.0f, 1.0f };
+    SetShaderValue(light_shader, ambientLoc, v, SHADER_UNIFORM_VEC4);*/
 
-    auto light = CreateLight(
-                             LIGHT_DIRECTIONAL,
-                             (Vector3){ -50.0, 100, 0 },
-                             Vector3Zero(),
-                             WHITE,
-                             light_shader);
+    // Generate tilemap as image
+    int width = 16;
+    int height = 16;
+    Color *pixels = new Color[width * height];
+
+    for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) {
+            if ((x+y)%2 == 0) pixels[y*width + x] = Color{0*16,0*16,0};
+            else pixels[y*width + x] = Color{
+                    static_cast<unsigned char>(GetRandomValue(0,4)*16),
+                   static_cast<unsigned char>(GetRandomValue(0,4)*16),
+                    0};
+        }
+    }
+    Image tileMapIm = {
+        .data = pixels,
+        .width = width,
+        .height = height,
+        .format = PIXELFORMAT_UNCOMPRESSED_R8G8B8A8,
+        .mipmaps = 1
+    };
+    Texture2D checked = LoadTextureFromImage(tileMapIm);
+    UnloadImage(tileMapIm);
+
+        for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) {
+            pixels[y*width + x] = Color{
+                    static_cast<unsigned char>(GetRandomValue(0,2)*16),
+                   static_cast<unsigned char>(GetRandomValue(0,2)*16),
+                    0};
+        }
+    }
+    UpdateTexture(checked, pixels);
+
+
+
+    light = CreateLight(
+                        LIGHT_DIRECTIONAL,
+                        (Vector3){ -50.0, 100, 0 },
+                        Vector3Zero(),
+                        WHITE,
+                        light_shader);
+
+    CreateLight(
+                        LIGHT_DIRECTIONAL,
+                        (Vector3){ -50.0, 100, 0 },
+                        Vector3Zero(),
+                        WHITE,
+                        tile_shader);
 
     window.SetTargetFPS(60);
 
@@ -86,8 +129,9 @@ rm::renderer::renderer()
                      0);*/
 
     grid = LoadModelFromMesh(mesh);
-    grid.materials[0].shader = light_shader;
+    grid.materials[0].shader = tile_shader;
     grid.materials[0].maps[0].texture = tex;
+    grid.materials[0].maps[MATERIAL_MAP_SPECULAR].texture = checked;
 }
 
 const Color pal[] ={BROWN, DARKBROWN, WHITE, DARKGREEN};
@@ -109,6 +153,7 @@ void rm::renderer::render(game_manager &gm) {
                 ch.z * 100.0f
         };
         grid.Draw(ch_pos, 1.0f, pal[ch.col]);
+
         for (const auto p : ch.trees) {
             copse.Draw(Vector3Add(ch_pos,p), 1.0f, RAYWHITE);
         }
