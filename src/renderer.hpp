@@ -7,17 +7,19 @@
 namespace rm {
 
 class renderer {
- public:
+public:
+    raylib::Window window;
     raylib::Color text_col;    
     raylib::Model plane;
     raylib::Model tower;
     raylib::Model copse;
     raylib::Model mountain;
-
     raylib::Model grid;
 
+    raylib::Shader light_shader;
+
     renderer();
-    void render(rm::game_manager &gm, float dt, raylib::Shader &shader);
+    void render(rm::game_manager &gm);
 };
 
 } // namespace rm
