@@ -24,7 +24,7 @@ void rm::game_manager::update(float dt) {
     auto is_up = IsKeyDown(KEY_W) || IsKeyDown(KEY_UP) || yo < -0.5;
     auto is_down = IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN) || yo > 0.5;
 
-    //auto is_action = IsKeyDown(KEY_SPACE);
+    auto is_action = IsKeyDown(KEY_SPACE);
 
     plane.update(dt, is_left, is_right, is_up, is_down);
 
@@ -44,6 +44,8 @@ void rm::game_manager::update(float dt) {
         ch.update();
     }
 
-    auto t = terrain.get_tile_from_pos(plane.pos.x, plane.pos.z);
-    t->ticks = 1000;
+    if (is_action) {
+        auto t = terrain.get_tile_from_pos(plane.pos.x, plane.pos.z);
+        t->next_type = 2;
+    }
 }

@@ -5,9 +5,11 @@ namespace rm {
 
 class tile {
 public:
-  unsigned char type;
-  int ticks;
-  bool update();
+    unsigned char type;
+    unsigned char next_type;
+    int ticks;
+    bool update();
+    tile();
 };
 
 }

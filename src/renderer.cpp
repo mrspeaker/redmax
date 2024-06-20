@@ -152,16 +152,22 @@ void rm::renderer::render(game_manager &gm) {
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 Color c{};
-                switch(ch.tiles[y * width + x].type) {
+                auto& tile = ch.tiles[y * width + x];
+                switch(tile.type) {
                 case 0:
-                    c = Color{1 * 16, 2 * 16, 0};
+                    c = Color{5 * 16, 2 * 16, 0};
                     break;
                 case 1:
                     c = Color{3 * 16, 1 * 16, 0};
                     break;
                 case 2:
-                    c = Color{4 * 16, 3 * 16, 0};
+                    c = Color{static_cast<unsigned char>((tile.ticks / 100) * 16), 15 * 16, 0};
                     break;
+                case 3:
+                    c = Color{0 * 16, 0 * 16, 0};
+                    break;
+                default:
+                    c = Color{3 * 16, 2 * 16, 0};
                 }
                 pixels[y * width + x] = c;
             }
@@ -218,13 +224,17 @@ void rm::renderer::render(game_manager &gm) {
 
     gm.camera.cam.EndMode();
 
+    auto x = gm.plane.pos.x;
+    auto y = gm.plane.pos.z;
+    auto chunk_x = static_cast<int>(std::floor((x + 50.0) / 100.0f));
+    auto chunk_y = static_cast<int>(std::floor((y + 50.0) / 100.0f));
+    auto chunk_idx = (chunk_y + 4) * 9 + (chunk_x + 4);
+
     // ui
     text_col.DrawText(TextFormat("sp: %.2f", gm.plane.speed), 10, 10, 12);
     text_col.DrawText(TextFormat("alt: %.2f", gm.plane.pos.y), 10, 20, 12);
-    text_col.DrawText(TextFormat("pos: %.2f %.2f", gm.plane.pos.x - 50.0, gm.plane.pos.z), 10, 30, 12);
-    text_col.DrawText(TextFormat("pos: %d %d",
-                                 static_cast<int>(std::floor((gm.plane.pos.x - 50.0) / 100.0f)),
-                                 static_cast<int>(std::floor((gm.plane.pos.z - 50.0) / 100.0f))), 10, 40, 12);
+    text_col.DrawText(TextFormat("pos: %.2f %.2f", gm.plane.pos.x, gm.plane.pos.z), 10, 30, 12);
+    text_col.DrawText(TextFormat("chk: %d %d %d", chunk_x, chunk_y, chunk_idx), 10, 40, 12);
 
     EndDrawing();
 };
