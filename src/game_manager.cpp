@@ -44,4 +44,6 @@ void rm::game_manager::update(float dt) {
         ch.update();
     }
 
+    auto t = terrain.get_tile_from_pos(plane.pos.x, plane.pos.z);
+    t->ticks = 1000;
 }

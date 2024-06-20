@@ -18,6 +18,7 @@ class chunk {
     float z;
     std::vector<raylib::Vector3> trees;
     rm::tile *tiles;
+    bool dirty;
     chunk();
     ~chunk() {
         // Someone is deleting this...

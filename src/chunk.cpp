@@ -3,8 +3,9 @@
 #import <tile.hpp>
 
 rm::chunk::chunk()
-    : trees{{0.0, 0.0, 0.0}},
-      tiles(new tile[width * height]) {
+    : trees{{0.0, 0.0, 0.0}}
+    , tiles(new tile[width * height]) {
+    dirty = true;
     for (int y = 0; y < height; y++) {
       for (int x = 0; x < width; x++) {
           unsigned char ch = GetRandomValue(0,10) == 1 ? 1 : 0;
@@ -16,7 +17,9 @@ rm::chunk::chunk()
 void rm::chunk::update() {
     for (int y = 0; y < height; y++) {
       for (int x = 0; x < width; x++) {
-          tiles[y*width + x].update();
+          if (tiles[y*width + x].update()) {
+              dirty = true;
+          };
       }
     }
 }

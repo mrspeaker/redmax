@@ -7,7 +7,7 @@ class tile {
 public:
   unsigned char type;
   int ticks;
-  void update();
+  bool update();
 };
 
 }

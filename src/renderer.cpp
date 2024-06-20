@@ -9,7 +9,7 @@
 
 rm::renderer::renderer()
     : window(screenWidth, screenHeight, "RedMax"),
-      text_col(raylib::Color::Black()),
+      text_col(raylib::Color::White()),
       plane("res/biplane.glb"),
       tower("res/control.glb"),
       copse("res/copse.glb"),
@@ -139,27 +139,40 @@ void rm::renderer::render(game_manager &gm) {
     gm.camera.cam.BeginMode();
 
     // ground
-    for (const auto ch : gm.terrain.chunks) {
-      auto ch_pos = Vector3{ch.x * 100.0f, 0, ch.z * 100.0f};
+    auto ii = 0;
+    for (auto ch : gm.terrain.chunks) {
+        if (!ch.dirty) continue;
+        ch.dirty = false;
+        auto ch_pos = Vector3{ch.x * 100.0f, 0, ch.z * 100.0f};
 
-      // todo: do this better. Currently updating the texture each time before
-      // drawing (even for non-visible chunks!).
-      // Should have a screen full of grid models, each with a texture...
-      // and even then only update if chunk is dirty
-      for (int y = 0; y < height; y++) {
-          for (int x = 0; x < width; x++) {
-                pixels[y * width + x] = ch.tiles[y * width + x].type == 0
-                  ? Color{5 * 16, 2 * 16, 0}
-                  : Color{3 * 16, 1 * 16, 0};
-          }
-      }
-      UpdateTexture(grid.materials[0].maps[MATERIAL_MAP_SPECULAR].texture, pixels);
+        // todo: do this better. Currently updating the texture each time before
+        // drawing (even for non-visible chunks!).
+        // Should have a screen full of grid models, each with a texture...
+        // and even then only update if chunk is dirty
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                Color c{};
+                switch(ch.tiles[y * width + x].type) {
+                case 0:
+                    c = Color{1 * 16, 2 * 16, 0};
+                    break;
+                case 1:
+                    c = Color{3 * 16, 1 * 16, 0};
+                    break;
+                case 2:
+                    c = Color{4 * 16, 3 * 16, 0};
+                    break;
+                }
+                pixels[y * width + x] = c;
+            }
+        }
+        UpdateTexture(grid.materials[0].maps[MATERIAL_MAP_SPECULAR].texture, pixels);
 
-      grid.Draw(ch_pos, 1.0f, pal[ch.col]);
+        grid.Draw(ch_pos, 1.0f, pal[ch.col]);
 
-      for (const auto p : ch.trees) {
-          copse.Draw(Vector3Add(ch_pos,p), 1.0f, RAYWHITE);
-      }
+        for (const auto p : ch.trees) {
+            copse.Draw(Vector3Add(ch_pos,p), 1.0f, RAYWHITE);
+        }
     }
 
     /*   if (GetRandomValue(0, 100) == 1) {
@@ -208,6 +221,10 @@ void rm::renderer::render(game_manager &gm) {
     // ui
     text_col.DrawText(TextFormat("sp: %.2f", gm.plane.speed), 10, 10, 12);
     text_col.DrawText(TextFormat("alt: %.2f", gm.plane.pos.y), 10, 20, 12);
+    text_col.DrawText(TextFormat("pos: %.2f %.2f", gm.plane.pos.x - 50.0, gm.plane.pos.z), 10, 30, 12);
+    text_col.DrawText(TextFormat("pos: %d %d",
+                                 static_cast<int>(std::floor((gm.plane.pos.x - 50.0) / 100.0f)),
+                                 static_cast<int>(std::floor((gm.plane.pos.z - 50.0) / 100.0f))), 10, 40, 12);
 
     EndDrawing();
 };

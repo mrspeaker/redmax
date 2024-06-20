@@ -1,12 +1,10 @@
 #include <tile.hpp>
 
-void rm::tile::update() {
-    ticks+=type + 1;
-  if (ticks > 100) {
-      ticks = 0;
-      type++;
-      if (type > 1) {
-          type = 0;
-      }
-  }
+bool rm::tile::update() {
+    if (ticks == 1000) {
+        type = 2;
+        ticks = 0;
+        return true;
+    }
+    return false;
 };
