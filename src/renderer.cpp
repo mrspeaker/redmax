@@ -165,13 +165,18 @@ void rm::renderer::render(game_manager &gm) {
 
     mountain.Draw(Vector3{0.0, 1.0, 200.0}, 1.0f, RAYWHITE);
 
-    auto z = static_cast<float>(GetRandomValue(0, 100)) / 100.0f - 0.5f;
-    auto rot = 45.0f;
-    mygod.Draw(
-               Vector3{40.0, z, 20.0},
+    for (int i = 0; i < 20; i++) {
+        auto z = static_cast<float>(GetRandomValue(0, 100)) / 100.0f - 0.5f;
+        auto rot = i * 10.0f;
+        auto xx = i / 5.0f;
+        auto yy = i % 5;
+
+        mygod.Draw(
+               Vector3{-100.0f + xx * 80.0f, z, yy * 80.0f - 100.f},
                Vector3{0.0f, 1.0f, 0.0},
                rot,
                Vector3{2.0,2.0,2.0}, RAYWHITE);
+    }
 
     plane.transform = gm.plane.transform;
 
