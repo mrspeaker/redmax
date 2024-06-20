@@ -1,7 +1,6 @@
 #include <terrain.hpp>
 
 #import <chunk.hpp>
-#import <iostream>
 
 rm::terrain::terrain() {
     const auto size = 4;

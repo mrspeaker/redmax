@@ -33,6 +33,9 @@ rm::renderer::renderer()
     for (int i = 0; i < mountain.materialCount; i++) {
         mountain.materials[i].shader = light_shader;
     }
+    for (int i = 0; i < mygod.materialCount; i++) {
+        mygod.materials[i].shader = light_shader;
+    }
 
     Texture2D tex = LoadTexture("res/terrain.png");
     mountain.materials[1].maps[0].texture = tex;
@@ -46,7 +49,7 @@ rm::renderer::renderer()
     int height = 16;
     pixels = new Color[width * height];
 
-    for (int y = 0; y < height; y++) {
+    /* for (int y = 0; y < height; y++) {
         for (int x = 0; x < width; x++) {
             if ((x+y)%2 == 0) pixels[y*width + x] = Color{0*16,0*16,0};
             else pixels[y*width + x] = Color{
@@ -54,30 +57,31 @@ rm::renderer::renderer()
                    static_cast<unsigned char>(GetRandomValue(0,4)*16),
                     0};
         }
-    }
+        }*/
     Image tileMapIm = {
         .data = pixels,
         .width = width,
         .height = height,
-        .format = PIXELFORMAT_UNCOMPRESSED_R8G8B8A8,
-        .mipmaps = 1
+        .mipmaps = 1,
+        .format = PIXELFORMAT_UNCOMPRESSED_R8G8B8A8
     };
     Texture2D checked = LoadTextureFromImage(tileMapIm);
     //UnloadImage(tileMapIm);
 
 
+    auto light_color =  Color{190,90,150};
     light = CreateLight(
                         LIGHT_DIRECTIONAL,
                         (Vector3){ -50.0, 100, 0 },
                         Vector3Zero(),
-                        WHITE,
+                        light_color,
                         light_shader);
 
     CreateLight(
                         LIGHT_DIRECTIONAL,
                         (Vector3){ -50.0, 100, 0 },
                         Vector3Zero(),
-                        WHITE,
+                        light_color,
                         tile_shader);
 
     window.SetTargetFPS(60);
@@ -136,19 +140,29 @@ void rm::renderer::render(game_manager &gm) {
 
     // ground
     for (const auto ch : gm.terrain.chunks) {
-        auto ch_pos = Vector3{
-                ch.x * 100.0f,
-                0,
-                ch.z * 100.0f
-        };
-        grid.Draw(ch_pos, 1.0f, pal[ch.col]);
+      auto ch_pos = Vector3{ch.x * 100.0f, 0, ch.z * 100.0f};
 
-        for (const auto p : ch.trees) {
-            copse.Draw(Vector3Add(ch_pos,p), 1.0f, RAYWHITE);
-        }
+      // todo: do this better. Currently updating the texture each time before
+      // drawing (even for non-visible chunks!).
+      // Should have a screen full of grid models, each with a texture...
+      // and even then only update if chunk is dirty
+      for (int y = 0; y < height; y++) {
+          for (int x = 0; x < width; x++) {
+                pixels[y * width + x] = ch.tiles[y * width + x] == 0
+                  ? Color{5 * 16, 2 * 16, 0}
+                  : Color{3 * 16, 1 * 16, 0};
+          }
+      }
+      UpdateTexture(grid.materials[0].maps[MATERIAL_MAP_SPECULAR].texture, pixels);
+
+      grid.Draw(ch_pos, 1.0f, pal[ch.col]);
+
+      for (const auto p : ch.trees) {
+          copse.Draw(Vector3Add(ch_pos,p), 1.0f, RAYWHITE);
+      }
     }
 
-    if (GetRandomValue(0, 100) == 1) {
+    /*   if (GetRandomValue(0, 100) == 1) {
         auto height = 16;
         auto width = 16;
         for (int y = 0; y < height; y++) {
@@ -161,7 +175,7 @@ void rm::renderer::render(game_manager &gm) {
         }
         auto tex = grid.materials[0].maps[MATERIAL_MAP_SPECULAR].texture;
         UpdateTexture(tex, pixels);
-    }
+        }*/
 
     mountain.Draw(Vector3{0.0, 1.0, 200.0}, 1.0f, RAYWHITE);
 
