@@ -14,8 +14,10 @@ rm::renderer::renderer()
       tower("res/control.glb"),
       copse("res/copse.glb"),
       mountain("res/mountain.glb"),
+      mygod("res/mygod.glb"),
       light_shader("res/lighting.vs", "res/lighting.fs"),
-      tile_shader("res/lighting.vs", "res/tiles.fs") {
+      tile_shader("res/lighting.vs", "res/tiles.fs"),
+      godzilla("res/godzilla.png") {
 
     SetConfigFlags(FLAG_MSAA_4X_HINT);
 
@@ -42,7 +44,7 @@ rm::renderer::renderer()
     // Generate tilemap as image
     int width = 16;
     int height = 16;
-    Color *pixels = new Color[width * height];
+    pixels = new Color[width * height];
 
     for (int y = 0; y < height; y++) {
         for (int x = 0; x < width; x++) {
@@ -61,18 +63,7 @@ rm::renderer::renderer()
         .mipmaps = 1
     };
     Texture2D checked = LoadTextureFromImage(tileMapIm);
-    UnloadImage(tileMapIm);
-
-        for (int y = 0; y < height; y++) {
-        for (int x = 0; x < width; x++) {
-            pixels[y*width + x] = Color{
-                    static_cast<unsigned char>(GetRandomValue(0,2)*16),
-                   static_cast<unsigned char>(GetRandomValue(0,2)*16),
-                    0};
-        }
-    }
-    UpdateTexture(checked, pixels);
-
+    //UnloadImage(tileMapIm);
 
 
     light = CreateLight(
@@ -143,8 +134,6 @@ void rm::renderer::render(game_manager &gm) {
 
     gm.camera.cam.BeginMode();
 
-    light_shader.BeginMode();
-
     // ground
     for (const auto ch : gm.terrain.chunks) {
         auto ch_pos = Vector3{
@@ -159,7 +148,30 @@ void rm::renderer::render(game_manager &gm) {
         }
     }
 
+    if (GetRandomValue(0, 100) == 1) {
+        auto height = 16;
+        auto width = 16;
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                pixels[y*width + x] = Color{
+                    static_cast<unsigned char>(GetRandomValue(0,2)*16),
+                    static_cast<unsigned char>(GetRandomValue(0,2)*16),
+                    0};
+            }
+        }
+        auto tex = grid.materials[0].maps[MATERIAL_MAP_SPECULAR].texture;
+        UpdateTexture(tex, pixels);
+    }
+
     mountain.Draw(Vector3{0.0, 1.0, 200.0}, 1.0f, RAYWHITE);
+
+    auto z = static_cast<float>(GetRandomValue(0, 100)) / 100.0f - 0.5f;
+    auto rot = 45.0f;
+    mygod.Draw(
+               Vector3{40.0, z, 20.0},
+               Vector3{0.0f, 1.0f, 0.0},
+               rot,
+               Vector3{2.0,2.0,2.0}, RAYWHITE);
 
     plane.transform = gm.plane.transform;
 
@@ -172,7 +184,6 @@ void rm::renderer::render(game_manager &gm) {
         tower.Draw(t.pos, 1.0f, RAYWHITE);
     }
 
-    light_shader.EndMode();
     gm.camera.cam.EndMode();
 
     // ui
