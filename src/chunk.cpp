@@ -19,7 +19,12 @@ rm::chunk::chunk()
 void rm::chunk::update() {
     for (int y = 0; y < height; y++) {
       for (int x = 0; x < width; x++) {
-          if (tiles[y*width + x].update()) {
+          auto& tile = tiles[y*width + x];
+          if (x < width && tile.type == 0 && tiles[y*width + x + 1].type == 3) {
+              tile.next_type = 2;
+          }
+
+          if (tile.update()) {
               dirty = true;
           };
       }
