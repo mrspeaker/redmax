@@ -40,4 +40,8 @@ void rm::game_manager::update(float dt) {
     camera.cam.target.x = plane.pos.x;
     camera.cam.target.z = plane.pos.z;
 
+    for (auto ch : terrain.chunks) {
+        ch.update();
+    }
+
 }

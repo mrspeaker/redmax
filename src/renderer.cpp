@@ -148,7 +148,7 @@ void rm::renderer::render(game_manager &gm) {
       // and even then only update if chunk is dirty
       for (int y = 0; y < height; y++) {
           for (int x = 0; x < width; x++) {
-                pixels[y * width + x] = ch.tiles[y * width + x] == 0
+                pixels[y * width + x] = ch.tiles[y * width + x].type == 0
                   ? Color{5 * 16, 2 * 16, 0}
                   : Color{3 * 16, 1 * 16, 0};
           }

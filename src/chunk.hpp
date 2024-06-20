@@ -4,6 +4,7 @@
 #import <vector>
 #import <Vector3.hpp>
 #import <memory>
+#import <tile.hpp>
 
 namespace rm {
 
@@ -16,12 +17,13 @@ class chunk {
     float x;
     float z;
     std::vector<raylib::Vector3> trees;
-    unsigned char *tiles;
+    rm::tile *tiles;
     chunk();
     ~chunk() {
         // Someone is deleting this...
         //delete[] tiles;
     }
+    void update();
 };
 
 } // namespace rm
