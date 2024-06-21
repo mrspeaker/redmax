@@ -11,6 +11,8 @@ public:
     raylib::Vector3 pos;
     raylib::Vector3 rot;
     raylib::Vector3 scale;
+
+    trans():pos{}, rot{}, scale{} {}
 };
 
 } // namespace rm
