@@ -1,6 +1,7 @@
 #include <game_manager.hpp>
 #include <iostream>
 #include <raylib-cpp.hpp>
+#include <godzilla.hpp>
 
 rm::game_manager::game_manager() {
     for (int j = 0; j < 3; j++) {
@@ -13,6 +14,21 @@ rm::game_manager::game_manager() {
         }
     }
     plane.pos.x += 20.0;
+
+    for (int j = 0; j < 20; j++) {
+        auto g = rm::godzilla{};
+        g.t.pos.x = GetRandomValue(-100, 100) * 1.0f;
+        g.t.pos.z = GetRandomValue(-100, 100) * 1.0f;
+        g.t.pos.y = 0.0;
+        g.t.rot.y = (j / 20.f) * 360.f;//(GetRandomValue(0, 100) / 100.0f) * 360.0f;
+        godzillas.push_back(g);
+    }
+
+
+    auto m = rm::missile();
+    m.t.pos.z = 3.0f;
+    m.t.pos.x = 20.0f;
+    missiles.push_back(m);
 };
 
 void rm::game_manager::update(float dt) {
@@ -40,8 +56,17 @@ void rm::game_manager::update(float dt) {
     camera.cam.target.x = plane.pos.x;
     camera.cam.target.z = plane.pos.z;
 
-    for (auto ch : terrain.chunks) {
+    for (auto& g : godzillas) {
+        g.update();
+    }
+
+
+    for (auto& ch : terrain.chunks) {
         ch.update();
+    }
+
+    for (auto& m : missiles) {
+        m.update();
     }
 
     if (is_action) {

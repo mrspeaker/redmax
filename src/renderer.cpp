@@ -198,16 +198,11 @@ void rm::renderer::render(game_manager &gm) {
 
     mountain.Draw(Vector3{0.0, 1.0, 200.0}, 1.0f, RAYWHITE);
 
-    for (int i = 0; i < 20; i++) {
-        auto z = static_cast<float>(GetRandomValue(0, 100)) / 100.0f - 0.5f;
-        auto rot = i * 10.0f;
-        auto xx = i / 5.0f;
-        auto yy = i % 5;
-
+    for (auto& g : gm.godzillas) {
         mygod.Draw(
-               Vector3{-100.0f + xx * 80.0f, z, yy * 80.0f - 100.f},
+               g.t.pos,
                Vector3{0.0f, 1.0f, 0.0},
-               rot,
+               g.t.rot.y,
                Vector3{2.0,2.0,2.0}, RAYWHITE);
     }
 
@@ -220,6 +215,12 @@ void rm::renderer::render(game_manager &gm) {
     // towers
     for (const auto &t : gm.towers) {
         tower.Draw(t.pos, 1.0f, RAYWHITE);
+    }
+
+
+    // missiles
+    for (const auto &m : gm.missiles) {
+        m.t.pos.DrawCube(2.0f, 4.0f, 2.0f, YELLOW);
     }
 
     gm.camera.cam.EndMode();
