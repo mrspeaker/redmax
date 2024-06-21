@@ -17,8 +17,8 @@ rm::game_manager::game_manager() {
 
     for (int j = 0; j < 20; j++) {
         auto g = rm::godzilla{};
-        g.t.pos.x = GetRandomValue(-100, 100) * 1.0f;
-        g.t.pos.z = GetRandomValue(-100, 100) * 1.0f;
+        g.t.pos.x = j * 20.0 - 200.0;//GetRandomValue(-100, 100) * 1.0f;
+        g.t.pos.z = 0.0;//GetRandomValue(-100, 100) * 1.0f;
         g.t.pos.y = 0.0;
         g.t.rot.y = (j / 20.f) * 360.f;//(GetRandomValue(0, 100) / 100.0f) * 360.0f;
         godzillas.push_back(g);

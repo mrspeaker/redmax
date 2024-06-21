@@ -143,7 +143,7 @@ void rm::renderer::render(game_manager &gm) {
     for (auto ch : gm.terrain.chunks) {
         if (!ch.dirty) continue;
         ch.dirty = false;
-        auto ch_pos = Vector3{ch.x * 100.0f, 0, ch.z * 100.0f};
+        auto ch_pos = Vector3{ch.x * 100.0f + 50.0f, 0, ch.z * 100.0f + 50.0f};
 
         // todo: do this better. Currently updating the texture each time before
         // drawing (even for non-visible chunks!).
@@ -227,8 +227,8 @@ void rm::renderer::render(game_manager &gm) {
 
     auto x = gm.plane.pos.x;
     auto y = gm.plane.pos.z;
-    auto chunk_x = static_cast<int>(std::floor((x + 50.0) / 100.0f));
-    auto chunk_y = static_cast<int>(std::floor((y + 50.0) / 100.0f));
+    auto chunk_x = static_cast<int>(std::floor((x + 0.0) / 100.0f));
+    auto chunk_y = static_cast<int>(std::floor((y + 0.0) / 100.0f));
     auto chunk_idx = (chunk_y + 4) * 9 + (chunk_x + 4);
 
     // ui
