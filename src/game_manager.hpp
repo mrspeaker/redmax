@@ -23,7 +23,6 @@ class game_manager {
     std::vector<rm::seed> seeds;
     rm::tile* last_plane_tile;
     bool seeded;
-
     game_manager();
     void update(float dt);
 };

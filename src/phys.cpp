@@ -6,9 +6,9 @@ rm::phys::phys()
 
 
 void rm::phys::integrate(float dt, rm::trans *t) {
-    vel = vel.Add(acc.Scale(dt));
-
-    t->pos.x += vel.x;
-    t->pos.x += vel.y;
-    t->pos.z += vel.z;
+    //vel = vel.Add(acc.Scale(dt));
+    vel.z += acc.z * dt;
+    t->pos.x += std::sinf(t->rot.y) * vel.z;
+    t->pos.y += vel.y;
+    t->pos.z += std::cosf(t->rot.y) * vel.z;
 };

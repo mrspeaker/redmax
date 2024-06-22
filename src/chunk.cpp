@@ -8,7 +8,7 @@ rm::chunk::chunk()
     dirty = true;
     for (int y = 0; y < height; y++) {
       for (int x = 0; x < width; x++) {
-          unsigned char ch = GetRandomValue(0,10) == 1 ? 1 : 0;
+          unsigned char ch = 0; //GetRandomValue(0,10) == 1 ? 1 : 0;
           rm::tile t = tile();
           t.type = ch;
           tiles[y*width + x] = t;

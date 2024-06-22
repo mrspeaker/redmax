@@ -11,8 +11,8 @@ public:
     rm::trans t;
     rm::phys phys;
     raylib::Vector3 *target;
-    missile();
-    //missile(raylib::Vector3 *t):target(t){};
+    missile()=default;
+    missile(raylib::Vector3 *t):target(t){};
     float life;
 
     bool update(float dt);

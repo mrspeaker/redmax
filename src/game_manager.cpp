@@ -18,21 +18,13 @@ rm::game_manager::game_manager():terrain(128.0) {
 
     for (int j = 0; j < 20; j++) {
         auto g = rm::godzilla{};
-        g.t.pos.x = j * 20.0 - 200.0;//GetRandomValue(-100, 100) * 1.0f;
-        g.t.pos.z = 0.0;//GetRandomValue(-100, 100) * 1.0f;
+        g.t.pos.x = GetRandomValue(-400, 400) * 1.0f;
+        g.t.pos.z = GetRandomValue(-400, 400) * 1.0f;
         g.t.pos.y = 0.0;
         g.t.rot.y = (j / 20.f) * 360.f;//(GetRandomValue(0, 100) / 100.0f) * 360.0f;
         godzillas.push_back(g);
     }
 
-
-    auto m = rm::missile();
-    m.t.pos.z = 33.0f;
-    m.t.pos.x = 20.0f;
-    m.phys.acc.z = 0.1f;
-    m.life = 10.0;
-
-    missiles.push_back(m);
 };
 
 void rm::game_manager::update(float dt) {
@@ -53,7 +45,6 @@ void rm::game_manager::update(float dt) {
         last_plane_tile = tile;
     }
 
-
     const auto size = 300.0;
     if (plane.pos.x < -size) plane.pos.x += size * 2.0;
     if (plane.pos.x > size) plane.pos.x -= size * 2.0;
@@ -69,11 +60,12 @@ void rm::game_manager::update(float dt) {
     for (auto& g : godzillas) {
         g.update(dt);
         if (GetRandomValue(0, 1000)==1) {
-            auto m = rm::missile();
+            auto m = rm::missile(&plane.pos);
             m.t.pos.x = g.t.pos.x;
             m.t.pos.y = 1.0f;
             m.t.pos.z = g.t.pos.z;
             m.phys.acc.z = 0.1f;
+            m.t.rot.y = 0.0f;
             m.life = 10.0;
             missiles.push_back(m);
         }
