@@ -1,9 +1,12 @@
 #import <phys.hpp>
 
+rm::phys::phys()
+    :vel{0,0,0}
+    ,acc{0,0,0}{};
+
+
 void rm::phys::integrate(float dt, rm::trans *t) {
-    vel.x += acc.x * dt;
-    vel.y += acc.y * dt;
-    vel.z += acc.z * dt;
+    vel = vel.Add(acc.Scale(dt));
 
     t->pos.x += vel.x;
     t->pos.x += vel.y;
