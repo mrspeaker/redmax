@@ -14,7 +14,7 @@ public:
     missile();
     missile(raylib::Vector3 *t):target(t){};
 
-    void update();
+    void update(float dt);
 };
 
 } // namespace

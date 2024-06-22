@@ -57,13 +57,13 @@ void rm::game_manager::update(float dt) {
     camera.cam.target.z = plane.pos.z;
 
     for (auto& g : godzillas) {
-        g.update();
+        g.update(dt);
     }
 
-    terrain.update();
+    terrain.update(dt);
 
     for (auto& m : missiles) {
-        m.update();
+        m.update(dt);
     }
 
     if (is_action) {

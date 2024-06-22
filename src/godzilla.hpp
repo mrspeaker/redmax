@@ -8,7 +8,7 @@ namespace rm {
 class godzilla {
 public:
     rm::trans t;
-    void update();
+    void update(float dt);
 };
 
 } // namespace

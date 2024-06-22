@@ -16,7 +16,7 @@ class terrain {
     std::vector<chunk> chunks;
     float chunk_size;
     terrain(float chunk_size);
-    void update();
+    void update(float dt);
     rm::tile *get_tile_from_pos(float x, float y);
 };
 

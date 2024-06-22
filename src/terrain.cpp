@@ -35,7 +35,7 @@ rm::tile* rm::terrain::get_tile_from_pos(float x, float y) {
     return &(chunk->tiles[tile_y * 16 + tile_x]);
 }
 
-void rm::terrain::update() {
+void rm::terrain::update(float dt) {
     for (auto& chunk : chunks) {
         chunk.update();
     }
