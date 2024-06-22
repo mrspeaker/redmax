@@ -68,6 +68,21 @@ void rm::game_manager::update(float dt) {
 
     for (auto& g : godzillas) {
         g.update(dt);
+        if (GetRandomValue(0, 1000)==1) {
+            auto m = rm::missile();
+            m.t.pos.x = g.t.pos.x;
+            m.t.pos.z = g.t.pos.z;
+            m.t.pos.y = 1.0f;
+            //m.phys.acc.z = 0.1f;
+            m.phys.acc.z = 0.1f;
+            m.phys.acc.x = 0.f;
+            m.phys.acc.y = 0.f;
+            m.phys.vel.x = 0.f;
+            m.phys.vel.y = 0.f;
+            m.phys.vel.z = 0.f;
+            m.life = 10.0;
+            missiles.push_back(m);
+        }
     }
 
     terrain.update(dt);

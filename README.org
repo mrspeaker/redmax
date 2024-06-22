@@ -1,4 +1,6 @@
-# Redmax
+* Redmax
+
+** Setup
 
 ```console
 $ make setup
@@ -12,3 +14,9 @@ By using the following Make commands instead of the default target, we can skip 
 ```console
 $ make bin/app; make execute
 ```
+
+
+** iderrs/todos
+
+- when get out of plane, swarmed by lil dudes. can pre-drop stuff to keep them away.
+
