@@ -22,6 +22,7 @@ class chunk {
     chunk();
     ~chunk() {
         // Someone is deleting this...
+        // raylib? where?
         //delete[] tiles;
     }
     void update();

@@ -3,7 +3,7 @@
 #include <raylib-cpp.hpp>
 #include <godzilla.hpp>
 
-rm::game_manager::game_manager() {
+rm::game_manager::game_manager():terrain(128.0) {
     for (int j = 0; j < 3; j++) {
         for (int i = 0; i < 4; i++) {
             rm::tower t{};
@@ -60,10 +60,7 @@ void rm::game_manager::update(float dt) {
         g.update();
     }
 
-
-    for (auto& ch : terrain.chunks) {
-        ch.update();
-    }
+    terrain.update();
 
     for (auto& m : missiles) {
         m.update();

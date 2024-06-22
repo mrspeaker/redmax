@@ -4,8 +4,8 @@
 #include <game_manager.hpp>
 
 int main() {
-    rm::renderer rend{};
     rm::game_manager gm{};
+    rm::renderer rend(gm);
 
     while (!rend.window.ShouldClose()) {
         auto dt = GetFrameTime();

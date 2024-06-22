@@ -7,7 +7,7 @@
 #define RLIGHTS_IMPLEMENTATION
 #include "./rlights.h"
 
-rm::renderer::renderer()
+rm::renderer::renderer(game_manager &gm)
     : window(screenWidth, screenHeight, "RedMax"),
       text_col(raylib::Color::White()),
       plane("res/biplane.glb"),
@@ -90,7 +90,7 @@ rm::renderer::renderer()
     auto resZ = size + 1;
     auto resX = size + 1;
 
-    auto mesh = GenMeshPlane(100.0, 100.0, size, size);
+    auto mesh = GenMeshPlane(gm.terrain.chunk_size, gm.terrain.chunk_size, size, size);
 
     /*    auto scale = 0.0; // amount to scale height offset by
     for (int z = 0; z < resZ; z++) {
@@ -140,10 +140,11 @@ void rm::renderer::render(game_manager &gm) {
 
     // ground
     auto ii = 0;
+    auto size = gm.terrain.chunk_size;
     for (auto ch : gm.terrain.chunks) {
         if (!ch.dirty) continue;
         ch.dirty = false;
-        auto ch_pos = Vector3{ch.x * 100.0f + 50.0f, 0, ch.z * 100.0f + 50.0f};
+        auto ch_pos = Vector3{ch.x * size + size / 2.0f, 0, ch.z * size + size / 2.0f};
 
         // todo: do this better. Currently updating the texture each time before
         // drawing (even for non-visible chunks!).
@@ -227,8 +228,8 @@ void rm::renderer::render(game_manager &gm) {
 
     auto x = gm.plane.pos.x;
     auto y = gm.plane.pos.z;
-    auto chunk_x = static_cast<int>(std::floor((x + 0.0) / 100.0f));
-    auto chunk_y = static_cast<int>(std::floor((y + 0.0) / 100.0f));
+    auto chunk_x = static_cast<int>(std::floor((x + 0.0) / size));
+    auto chunk_y = static_cast<int>(std::floor((y + 0.0) / size));
     auto chunk_idx = (chunk_y + 4) * 9 + (chunk_x + 4);
 
     // ui

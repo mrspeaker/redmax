@@ -27,7 +27,7 @@ public:
 
     Color *pixels;
 
-    renderer();
+    renderer(game_manager &gm);
     void render(rm::game_manager &gm);
     ~renderer() {
         delete[] pixels;
