@@ -8,6 +8,7 @@ namespace rm {
 
 struct phys {
     raylib::Vector3 vel;
+    raylib::Vector3 acc;
 
     void integrate(float dt, rm::trans *t);
 };

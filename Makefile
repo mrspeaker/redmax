@@ -17,7 +17,7 @@ sources := $(call rwildcard,src/,*.cpp)
 objects := $(patsubst src/%, $(buildDir)/%, $(patsubst %.cpp, %.o, $(sources)))
 depends := $(patsubst %.o, %.d, $(objects))
 #-fsanitize=undefined
-compileFlags := -std=c++17 -I include -I src
+compileFlags := -std=c++20 -I include -I src
 linkFlags = -L lib/$(platform) -l raylib
 
 # Check for Windows

@@ -2,6 +2,7 @@
 #include <iostream>
 #include <raylib-cpp.hpp>
 #include <godzilla.hpp>
+#include <vector>
 
 rm::game_manager::game_manager():terrain(128.0) {
     for (int j = 0; j < 3; j++) {
@@ -26,8 +27,11 @@ rm::game_manager::game_manager():terrain(128.0) {
 
 
     auto m = rm::missile();
-    m.t.pos.z = 3.0f;
+    m.t.pos.z = 33.0f;
     m.t.pos.x = 20.0f;
+    m.phys.acc.z = 0.1f;
+    m.life = 10.0;
+
     missiles.push_back(m);
 };
 
@@ -43,6 +47,12 @@ void rm::game_manager::update(float dt) {
     auto is_action = IsKeyDown(KEY_SPACE);
 
     plane.update(dt, is_left, is_right, is_up, is_down);
+    auto tile = terrain.get_tile_from_pos(plane.pos.x, plane.pos.z);
+    if (tile != last_plane_tile) {
+        seeded = false;
+        last_plane_tile = tile;
+    }
+
 
     const auto size = 300.0;
     if (plane.pos.x < -size) plane.pos.x += size * 2.0;
@@ -62,12 +72,31 @@ void rm::game_manager::update(float dt) {
 
     terrain.update(dt);
 
-    for (auto& m : missiles) {
-        m.update(dt);
-    }
+    // missiles
+    std::erase_if(missiles, [&](rm::missile& m) {
+        return m.update(dt);
+    });
 
-    if (is_action) {
-        auto t = terrain.get_tile_from_pos(plane.pos.x, plane.pos.z);
-        t->next_type = 2;
+    // Plant seeds if they hit the deck
+    std::erase_if(seeds, [&](rm::seed& s) {
+        s.update(dt);
+        auto landed = s.state == rm::seed_state::LANDED;
+        if (landed) {
+            auto t = terrain.get_tile_from_pos(s.t.pos.x, s.t.pos.z);
+            if (t->type != 2 && t->type != 3) {
+                t->next_type = 2;
+            }
+        }
+        return landed;
+    });
+
+    // Fire seeds
+    if (is_action && plane.flying() && !seeded) {
+        seeded = true;
+        auto seed = rm::seed();
+        seed.t.pos.x = plane.pos.x;
+        seed.t.pos.y = plane.pos.y;
+        seed.t.pos.z = plane.pos.z;
+        seeds.push_back(seed);
     }
 }

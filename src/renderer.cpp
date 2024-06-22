@@ -218,10 +218,14 @@ void rm::renderer::render(game_manager &gm) {
         tower.Draw(t.pos, 1.0f, RAYWHITE);
     }
 
-
     // missiles
     for (const auto &m : gm.missiles) {
         m.t.pos.DrawCube(2.0f, 4.0f, 2.0f, YELLOW);
+    }
+
+    // seeds
+    for (const auto &s : gm.seeds) {
+        s.t.pos.DrawCube(1.0f, 1.0f, 1.0f, ORANGE);
     }
 
     gm.camera.cam.EndMode();

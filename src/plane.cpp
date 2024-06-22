@@ -85,3 +85,9 @@ void rm::plane::update(float dt, bool is_left, bool is_right, bool is_up, bool i
     auto v = Vector3Transform((Vector3){0,0,vel*dt}, transform);
     pos +=v;
 }
+
+bool rm::plane::flying() {
+    const auto ground = 1.5;
+
+    return pos.y > ground;
+}

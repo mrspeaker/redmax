@@ -7,6 +7,7 @@
 #include <terrain.hpp>
 #include <missile.hpp>
 #include <godzilla.hpp>
+#include <seed.hpp>
 #include <vector>
 
 namespace rm {
@@ -19,6 +20,9 @@ class game_manager {
     std::vector<rm::godzilla> godzillas;
     std::vector<rm::tower> towers;
     std::vector<rm::missile> missiles;
+    std::vector<rm::seed> seeds;
+    rm::tile* last_plane_tile;
+    bool seeded;
 
     game_manager();
     void update(float dt);
