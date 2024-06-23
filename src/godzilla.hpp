@@ -8,7 +8,9 @@ namespace rm {
 class godzilla {
 public:
     rm::trans t;
+    float cooldown;
     void update(float dt);
+    bool can_fire();
 };
 
 } // namespace

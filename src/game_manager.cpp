@@ -3,6 +3,7 @@
 #include <raylib-cpp.hpp>
 #include <godzilla.hpp>
 #include <vector>
+#include <algorithm>
 
 rm::game_manager::game_manager():terrain(128.0) {
     for (int j = 0; j < 3; j++) {
@@ -53,13 +54,16 @@ void rm::game_manager::update(float dt) {
 
     camera.cam.position.x = plane.pos.x;
     camera.cam.position.z = plane.pos.z - 50;
-    camera.cam.position.y = (plane.speed + 10) / 30.0 * 200.0;
+    auto cyo = (std::clamp(plane.pos.y, 20.0f, 50.0f) - 20.0f) / 30.0f;
+    camera.cam.position.y = (plane.speed + 10) / 30.0 * (100.0 + cyo * 200.0);
     camera.cam.target.x = plane.pos.x;
     camera.cam.target.z = plane.pos.z;
 
     for (auto& g : godzillas) {
         g.update(dt);
-        if (GetRandomValue(0, 1000)==1) {
+        auto dist = g.t.pos.Distance(plane.pos);
+        if (dist < 100.0f && g.can_fire()) {
+            g.cooldown = 0;
             auto m = rm::missile(&plane.pos);
             m.t.pos.x = g.t.pos.x;
             m.t.pos.y = 1.0f;
@@ -69,6 +73,10 @@ void rm::game_manager::update(float dt) {
             m.life = 10.0;
             missiles.push_back(m);
         }
+        if (g.t.pos.x < -400.0) g.t.pos.x += 800.0;
+        if (g.t.pos.x > 400.0) g.t.pos.x -= 800.0;
+        if (g.t.pos.z < -400.0) g.t.pos.z += 800.0;
+        if (g.t.pos.z > 400.0) g.t.pos.z -= 800.0;
     }
 
     terrain.update(dt);

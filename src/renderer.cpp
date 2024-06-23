@@ -220,7 +220,7 @@ void rm::renderer::render(game_manager &gm) {
 
     // missiles
     for (const auto &m : gm.missiles) {
-        m.t.pos.DrawCube(2.0f, 4.0f, 2.0f, YELLOW);
+        m.t.pos.DrawCube(2.0f, 2.0f, 2.0f, YELLOW);
     }
 
     // seeds
