@@ -2,8 +2,8 @@
 #include <iostream>
 
 rm::tile::tile()
-    : type(0),
-      next_type(-1) {}
+    : type(0)
+    , next_type(-1) {}
 
 bool rm::tile::update() {
     ticks++;

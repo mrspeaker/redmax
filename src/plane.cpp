@@ -11,7 +11,7 @@ void rm::plane::update(float dt, bool is_left, bool is_right, bool is_up, bool i
     auto yaw = rot.y;
     auto roll = rot.z;
 
-    const auto rot_speed = 1.0f * dt;
+    const auto rot_speed = 3.0f * dt;
     auto yawo = 0.0;
     if (is_left) yawo += rot_speed;
     else if (is_right) yawo -= rot_speed;
@@ -39,7 +39,7 @@ void rm::plane::update(float dt, bool is_left, bool is_right, bool is_up, bool i
 
     const auto ground = 1.5;
 
-    const auto max_speed = 20.0;
+    const auto max_speed = 50.0;
     const auto takeoff_speed = 15.0;
     const auto acceleration = 10.0;
     const auto lift_speed = 15.0;

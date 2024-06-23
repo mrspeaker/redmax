@@ -8,26 +8,31 @@ rm::chunk::chunk()
     dirty = true;
     for (int y = 0; y < height; y++) {
       for (int x = 0; x < width; x++) {
-          unsigned char ch = 0; //GetRandomValue(0,10) == 1 ? 1 : 0;
           rm::tile t = tile();
-          t.type = ch;
+          t.type = 0;
           tiles[y*width + x] = t;
       }
     }
 }
 
 void rm::chunk::update() {
+    auto ch_x = x;
+    auto ch_z = z;
     for (int y = 0; y < height; y++) {
       for (int x = 0; x < width; x++) {
           auto& tile = tiles[y * width + x];
 
-          if (x < width && tile.type == 0 && tiles[y*width + x + 1].type == 3) {
+          if (x < width - 1 && tile.type == 0 && tiles[y*width + x + 1].type == 3) {
               tile.next_type = 2;
           }
 
+          auto last_type = tile.type;
           if (tile.update()) {
               dirty = true;
-          };
+              if (tile.type != last_type && tile.type == 3) {
+                  notify(game_event::SPAWN, world_x + (x * 8.0) + 4.0, 0.0, world_z + (y * 8.0) + 4.0);
+              }
+          }
       }
     }
 }

@@ -223,6 +223,11 @@ void rm::renderer::render(game_manager &gm) {
         m.t.pos.DrawCube(2.0f, 2.0f, 2.0f, YELLOW);
     }
 
+    // pickups
+    for (const auto &p : gm.pickups) {
+        p.t.pos.DrawCube(2.0f, 2.0f, 2.0f, GREEN);
+    }
+
     // seeds
     for (const auto &s : gm.seeds) {
         s.t.pos.DrawCube(1.0f, 1.0f, 1.0f, ORANGE);
@@ -241,6 +246,8 @@ void rm::renderer::render(game_manager &gm) {
     text_col.DrawText(TextFormat("alt: %.2f", gm.plane.pos.y), 10, 20, 12);
     text_col.DrawText(TextFormat("pos: %.2f %.2f", gm.plane.pos.x, gm.plane.pos.z), 10, 30, 12);
     text_col.DrawText(TextFormat("chk: %d %d %d", chunk_x, chunk_y, chunk_idx), 10, 40, 12);
+
+    text_col.DrawText(TextFormat("seeds: %d", gm.inv.slots[0].num), 100, 100, 12);
 
     EndDrawing();
 };

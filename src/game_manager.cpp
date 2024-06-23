@@ -1,9 +1,23 @@
+#include "Vector2.hpp"
 #include <game_manager.hpp>
 #include <iostream>
 #include <raylib-cpp.hpp>
 #include <godzilla.hpp>
 #include <vector>
 #include <algorithm>
+#include <iostream>
+
+void rm::game_manager::on_notify(game_event event, float x, float y, float z) {
+    switch(event) {
+    case game_event::SPAWN:
+        auto p = rm::pickup();
+        p.t.pos.x = x;
+        p.t.pos.y = 1.5;
+        p.t.pos.z = z;
+        pickups.push_back(p);
+        break;
+    }
+}
 
 rm::game_manager::game_manager():terrain(128.0) {
     for (int j = 0; j < 3; j++) {
@@ -17,14 +31,26 @@ rm::game_manager::game_manager():terrain(128.0) {
     }
     plane.pos.x += 20.0;
 
+    // Hook up observers
+    for (auto& ch : terrain.chunks) {
+        ch.add_observer(this);
+    }
+
     for (int j = 0; j < 20; j++) {
         auto g = rm::godzilla{};
         g.t.pos.x = GetRandomValue(-400, 400) * 1.0f;
         g.t.pos.z = GetRandomValue(-400, 400) * 1.0f;
         g.t.pos.y = 0.0;
-        g.t.rot.y = (j / 20.f) * 360.f;//(GetRandomValue(0, 100) / 100.0f) * 360.0f;
+        g.t.rot.y = (j / 20.f) * 360.f;
         godzillas.push_back(g);
     }
+
+    auto p = rm::pickup();
+    p.t.pos.x = 64.0;
+    p.t.pos.z = 64.0;
+    p.t.pos.y = 14.0;
+    pickups.push_back(p);
+
 
 };
 
@@ -55,7 +81,7 @@ void rm::game_manager::update(float dt) {
     camera.cam.position.x = plane.pos.x;
     camera.cam.position.z = plane.pos.z - 50;
     auto cyo = (std::clamp(plane.pos.y, 20.0f, 50.0f) - 20.0f) / 30.0f;
-    camera.cam.position.y = (plane.speed + 10) / 30.0 * (100.0 + cyo * 200.0);
+    camera.cam.position.y = (plane.speed + 10) / 50.0 * (100.0 + cyo * 200.0);
     camera.cam.target.x = plane.pos.x;
     camera.cam.target.z = plane.pos.z;
 
@@ -86,6 +112,17 @@ void rm::game_manager::update(float dt) {
         return m.update(dt);
     });
 
+    // pickups
+    auto plane_xz = raylib::Vector2(plane.pos.x, plane.pos.z);
+    std::erase_if(pickups, [&](rm::pickup& p) {
+        auto xz_dist = raylib::Vector2(p.t.pos.x, p.t.pos.z).Distance(plane_xz);
+        if (xz_dist < 5.0f && std::fabs(plane.pos.y - p.t.pos.y) < 20.0) {
+            inv.add_item(slot_type::SEEDS, 5);
+            return true;
+        }
+        return false;
+    });
+
     // Plant seeds if they hit the deck
     std::erase_if(seeds, [&](rm::seed& s) {
         s.update(dt);
@@ -100,8 +137,9 @@ void rm::game_manager::update(float dt) {
     });
 
     // Fire seeds
-    if (is_action && plane.flying() && !seeded) {
+    if (is_action && inv.slots[0].num > 0 && plane.flying() && !seeded) {
         seeded = true;
+        inv.slots[0].num-=1;
         auto seed = rm::seed();
         seed.t.pos.x = plane.pos.x;
         seed.t.pos.y = plane.pos.y;

@@ -9,6 +9,8 @@ rm::terrain::terrain(float chunk_size):chunk_size(chunk_size) {
             rm::chunk ch{};
             ch.x = i;
             ch.z = j;
+            ch.world_x = i * chunk_size;
+            ch.world_z = j * chunk_size;
             ch.col = abs(i + j) % 3;
             chunks.push_back(ch);
         }
