@@ -109,7 +109,13 @@ void rm::game_manager::update(float dt) {
 
     // missiles
     std::erase_if(missiles, [&](rm::missile& m) {
-        return m.update(dt);
+        auto alive = m.update(dt);
+        auto dist = m.t.pos.Distance(plane.pos);
+        if (dist < 6.0) {
+            // hit plane.
+            return true;
+        }
+        return alive;
     });
 
     // pickups

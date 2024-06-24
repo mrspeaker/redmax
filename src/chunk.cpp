@@ -15,7 +15,7 @@ rm::chunk::chunk()
     }
 }
 
-void rm::chunk::update() {
+void rm::chunk::update(std::vector<chunk>& chunks) {
     auto ch_x = x;
     auto ch_z = z;
     for (int y = 0; y < height; y++) {

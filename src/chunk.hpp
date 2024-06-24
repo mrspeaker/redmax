@@ -28,7 +28,7 @@ class chunk : public subject{
         // raylib? where?
         //delete[] tiles;
     }
-    void update();
+    void update(std::vector<chunk>& chunks);
 };
 
 } // namespace rm

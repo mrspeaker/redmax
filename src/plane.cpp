@@ -8,10 +8,16 @@ rm::plane::plane() {
 
 void rm::plane::update(float dt, bool is_left, bool is_right, bool is_up, bool is_down) {
 
+    const auto rot_speed = 2.5f * dt;
+    const auto max_speed = 40.0;
+    const auto takeoff_speed = 15.0;
+    const auto acceleration = 10.0;
+    const auto lift_speed = 15.0;
+    const auto ground_friction = 0.95;
+
     auto yaw = rot.y;
     auto roll = rot.z;
 
-    const auto rot_speed = 3.0f * dt;
     auto yawo = 0.0;
     if (is_left) yawo += rot_speed;
     else if (is_right) yawo -= rot_speed;
@@ -19,13 +25,14 @@ void rm::plane::update(float dt, bool is_left, bool is_right, bool is_up, bool i
     yaw += yawo;
 
     const auto roll_speed = 0.5f;
+    const auto max_roll = 75 * DEG2RAD;
     if (yawo > 0) {
-        if (roll > -1.0) {
+        if (roll > -max_roll) {
             roll -= (roll_speed * roll > 0 ? 2 : 1) * dt;
         }
     }
     else if (yawo < 0) {
-        if (roll < 1.0) {
+        if (roll < max_roll) {
             roll += (roll_speed * roll < 0 ? 2 : 1) * dt;
         }
     }
@@ -38,12 +45,6 @@ void rm::plane::update(float dt, bool is_left, bool is_right, bool is_up, bool i
     rot.z = roll;
 
     const auto ground = 1.5;
-
-    const auto max_speed = 50.0;
-    const auto takeoff_speed = 15.0;
-    const auto acceleration = 10.0;
-    const auto lift_speed = 15.0;
-    const auto ground_friction = 0.95;
 
     const auto flying = pos.y > ground;
     const auto falling = flying && speed < takeoff_speed;
