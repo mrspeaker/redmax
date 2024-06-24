@@ -14,6 +14,7 @@ public:
     raylib::Color text_col;    
     raylib::Model plane;
     raylib::Model tower;
+    raylib::Model runman;
     raylib::Model copse;
     raylib::Model mountain;
     raylib::Model grid;
@@ -24,6 +25,9 @@ public:
     raylib::Shader tile_shader;
 
     raylib::Texture2D godzilla;
+    std::vector<raylib::ModelAnimation> anims;
+    int frame=0;
+
 
     Color *pixels;
 

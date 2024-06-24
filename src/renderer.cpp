@@ -12,6 +12,7 @@ rm::renderer::renderer(game_manager &gm)
       text_col(raylib::Color::White()),
       plane("res/biplane.glb"),
       tower("res/control.glb"),
+      runman("res/runman.glb"),
       copse("res/copse.glb"),
       mountain("res/mountain.glb"),
       mygod("res/mygod.glb"),
@@ -30,12 +31,17 @@ rm::renderer::renderer(game_manager &gm)
     for (int i = 0; i < tower.materialCount; i++) {
         tower.materials[i].shader = light_shader;
     }
+    for (int i = 0; i < runman.materialCount; i++) {
+        runman.materials[i].shader = light_shader;
+    }
     for (int i = 0; i < mountain.materialCount; i++) {
         mountain.materials[i].shader = light_shader;
     }
     for (int i = 0; i < mygod.materialCount; i++) {
         mygod.materials[i].shader = light_shader;
     }
+
+    anims = raylib::ModelAnimation::Load("res/runman.glb");
 
     Texture2D tex = LoadTexture("res/terrain.png");
     mountain.materials[1].maps[0].texture = tex;
@@ -230,6 +236,12 @@ void rm::renderer::render(game_manager &gm) {
         if (p.type == rm::item_type::TURRET) c = RED;
         p.t.pos.DrawCube(2.0f, 2.0f, 2.0f, c);
     }
+
+    runman.UpdateAnimation(anims[0], frame++);
+    runman.Draw(raylib::Vector3(30.0, 2.0, 64.0), 1.0f, BLUE);
+
+    runman.UpdateAnimation(anims[1], frame);
+    runman.Draw(raylib::Vector3(40.0, 2.0, 64.0), 1.0f, BLUE);
 
     // seeds
     for (const auto &s : gm.seeds) {
