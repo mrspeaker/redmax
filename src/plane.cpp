@@ -13,8 +13,8 @@ void rm::plane::update(float dt, bool is_left, bool is_right, bool is_up, bool i
     const auto lift_speed = 15.0;
     const auto ground_friction = 0.95;
 
-    auto yaw = rot.y;
-    auto roll = rot.z;
+    auto yaw = t.rot.y;
+    auto roll = t.rot.z;
 
     auto yawo = 0.0;
     if (is_left) yawo += rot_speed;
@@ -39,12 +39,12 @@ void rm::plane::update(float dt, bool is_left, bool is_right, bool is_up, bool i
         else if (roll < 0.0f) roll += 0.5f * dt;
     }
 
-    rot.y = yaw;
-    rot.z = roll;
+    t.rot.y = yaw;
+    t.rot.z = roll;
 
     const auto ground = 1.5;
 
-    const auto flying = pos.y > ground;
+    const auto flying = t.pos.y > ground;
     const auto falling = flying && speed < takeoff_speed;
 
     const auto is_control = is_down || is_up;
@@ -52,14 +52,14 @@ void rm::plane::update(float dt, bool is_left, bool is_right, bool is_up, bool i
     if (is_down) {
             speed += acceleration * dt;
         if (speed > takeoff_speed) {
-            pos.y += lift_speed * dt;
+            t.pos.y += lift_speed * dt;
         }
     }
 
     if (is_up || falling) {
         if (flying) {
             speed -= acceleration * 0.5 * dt;
-            pos.y -= lift_speed * dt;
+            t.pos.y -= lift_speed * dt;
         } else {
             speed -= acceleration * dt;
         }
@@ -72,7 +72,7 @@ void rm::plane::update(float dt, bool is_left, bool is_right, bool is_up, bool i
         speed += acceleration * dt;
     }
 
-    if (pos.y <= ground) pos.y = ground;
+    if (t.pos.y <= ground) t.pos.y = ground;
     if (speed <= 0.0) speed = 0.0;
     if (falling && speed < 5.0) speed = 10.0;
     if (speed >= max_speed) speed = max_speed;
@@ -80,13 +80,13 @@ void rm::plane::update(float dt, bool is_left, bool is_right, bool is_up, bool i
     auto vel = speed;
     if (falling && speed < takeoff_speed) vel = takeoff_speed;
 
-    transform = raylib::Matrix().RotateXYZ(rot);
-    auto v = Vector3Transform((Vector3){0,0,vel*dt}, transform);
-    pos +=v;
+    t.transform = raylib::Matrix().RotateXYZ(t.rot);
+    auto v = Vector3Transform((Vector3){0,0,vel*dt}, t.transform);
+    t.pos +=v;
 }
 
 bool rm::plane::flying() {
     const auto ground = 1.5;
 
-    return pos.y > ground;
+    return t.pos.y > ground;
 }

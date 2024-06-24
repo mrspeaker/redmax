@@ -15,14 +15,14 @@ constexpr int height = 16;
 
 class chunk : public subject{
  public:
-    int col;
-    float x;
-    float z;
-    float world_x;
-    float world_z;
+    int col=0;
+    float x=0.0;
+    float z=0.0;
+    float world_x=0.0;
+    float world_z=0.0;
     std::vector<raylib::Vector3> trees;
     rm::tile *tiles;
-    bool dirty;
+    bool dirty=false;
     chunk();
     ~chunk() {
         // Someone is deleting this...

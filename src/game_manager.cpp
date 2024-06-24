@@ -16,7 +16,7 @@ void rm::game_manager::on_notify(game_event event, float x, float y, float z) {
 }
 
 rm::game_manager::game_manager():terrain(128.0), inv{} {
-    plane.pos.x += 20.0;
+    plane.t.pos.x += 20.0;
 
     // some towers
     for (int j = 0; j < 3; j++) {
@@ -65,9 +65,10 @@ void rm::game_manager::update(float dt) {
     auto is_action = IsKeyDown(KEY_SPACE);
 
     plane.update(dt, is_left, is_right, is_up, is_down);
+    auto& pos = plane.t.pos;
 
     // What tile are we over?
-    auto tile = terrain.get_tile_from_pos(plane.pos.x, plane.pos.z);
+    auto tile = terrain.get_tile_from_pos(pos.x, pos.z);
     if (tile != last_plane_tile) {
         seeded = false;
         last_plane_tile = tile;
@@ -75,26 +76,26 @@ void rm::game_manager::update(float dt) {
 
     // Wrap plane "seamlessly"
     const auto size = 300.0;
-    if (plane.pos.x < -size) plane.pos.x += size * 2.0;
-    if (plane.pos.x > size) plane.pos.x -= size * 2.0;
-    if (plane.pos.z < -size) plane.pos.z += size * 2.0;
-    if (plane.pos.z > size) plane.pos.z -= size * 2.0;
+    if (pos.x < -size) pos.x += size * 2.0;
+    if (pos.x > size) pos.x -= size * 2.0;
+    if (pos.z < -size) pos.z += size * 2.0;
+    if (pos.z > size) pos.z -= size * 2.0;
 
     // Cam update
-    camera.cam.position.x = plane.pos.x;
-    camera.cam.position.z = plane.pos.z - 50;
-    auto cyo = (std::clamp(plane.pos.y, 20.0f, 50.0f) - 20.0f) / 30.0f;
+    camera.cam.position.x = pos.x;
+    camera.cam.position.z = pos.z - 50;
+    auto cyo = (std::clamp(pos.y, 20.0f, 50.0f) - 20.0f) / 30.0f;
     camera.cam.position.y = (plane.speed + 10) / 50.0 * (100.0 + cyo * 200.0);
-    camera.cam.target.x = plane.pos.x;
-    camera.cam.target.z = plane.pos.z;
+    camera.cam.target.x = pos.x;
+    camera.cam.target.z = pos.z;
 
     // Godzillaz
     for (auto& g : godzillas) {
         g.update(dt);
-        auto dist = g.t.pos.Distance(plane.pos);
+        auto dist = g.t.pos.Distance(pos);
         if (dist < 100.0f && g.can_fire()) {
             g.cooldown = 0;
-            auto m = rm::missile(&plane.pos);
+            auto m = rm::missile(&pos);
             m.t.pos.x = g.t.pos.x;
             m.t.pos.y = 1.0f;
             m.t.pos.z = g.t.pos.z;
@@ -115,7 +116,7 @@ void rm::game_manager::update(float dt) {
     // missiles
     std::erase_if(missiles, [&](rm::missile& m) {
         auto alive = m.update(dt);
-        auto dist = m.t.pos.Distance(plane.pos);
+        auto dist = m.t.pos.Distance(pos);
         if (dist < 6.0) {
             // hit plane.
             return true;
@@ -124,10 +125,10 @@ void rm::game_manager::update(float dt) {
     });
 
     // pickups
-    auto plane_xz = raylib::Vector2(plane.pos.x, plane.pos.z);
+    auto plane_xz = raylib::Vector2(pos.x, pos.z);
     std::erase_if(pickups, [&](rm::pickup& p) {
         auto xz_dist = raylib::Vector2(p.t.pos.x, p.t.pos.z).Distance(plane_xz);
-        if (xz_dist < 5.0f && std::fabs(plane.pos.y - p.t.pos.y) < 20.0) {
+        if (xz_dist < 5.0f && std::fabs(pos.y - p.t.pos.y) < 20.0) {
             inv.add_item(slot_type::SEEDS, 5);
             return true;
         }
@@ -152,9 +153,9 @@ void rm::game_manager::update(float dt) {
         seeded = true;
         inv.slots[0].num-=1;
         auto seed = rm::seed();
-        seed.t.pos.x = plane.pos.x;
-        seed.t.pos.y = plane.pos.y;
-        seed.t.pos.z = plane.pos.z;
+        seed.t.pos.x = pos.x;
+        seed.t.pos.y = pos.y;
+        seed.t.pos.z = pos.z;
         seeds.push_back(seed);
     }
 }

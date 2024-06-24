@@ -30,7 +30,7 @@ public:
     std::vector<rm::pickup> pickups;
 
     rm::tile* last_plane_tile;
-    bool seeded;
+    bool seeded=false;
 
     game_manager();
     void update(float dt);

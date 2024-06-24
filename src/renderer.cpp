@@ -207,11 +207,11 @@ void rm::renderer::render(game_manager &gm) {
                Vector3{2.0,2.0,2.0}, RAYWHITE);
     }
 
-    plane.transform = gm.plane.transform;
+    plane.transform = gm.plane.t.transform;
 
     // shadow
-    plane.Draw(Vector3{gm.plane.pos.x, 0.0, gm.plane.pos.z}, 0.8f, BLACK);
-    plane.Draw(gm.plane.pos, 1.0f, RAYWHITE);
+    plane.Draw(Vector3{gm.plane.t.pos.x, 0.0, gm.plane.t.pos.z}, 0.8f, BLACK);
+    plane.Draw(gm.plane.t.pos, 1.0f, RAYWHITE);
 
     // towers
     for (const auto &t : gm.towers) {
@@ -235,16 +235,16 @@ void rm::renderer::render(game_manager &gm) {
 
     gm.camera.cam.EndMode();
 
-    auto x = gm.plane.pos.x;
-    auto y = gm.plane.pos.z;
+    auto x = gm.plane.t.pos.x;
+    auto y = gm.plane.t.pos.z;
     auto chunk_x = static_cast<int>(std::floor((x + 0.0) / size));
     auto chunk_y = static_cast<int>(std::floor((y + 0.0) / size));
     auto chunk_idx = (chunk_y + 4) * 9 + (chunk_x + 4);
 
     // ui
     text_col.DrawText(TextFormat("sp: %.2f", gm.plane.speed), 10, 10, 12);
-    text_col.DrawText(TextFormat("alt: %.2f", gm.plane.pos.y), 10, 20, 12);
-    text_col.DrawText(TextFormat("pos: %.2f %.2f", gm.plane.pos.x, gm.plane.pos.z), 10, 30, 12);
+    text_col.DrawText(TextFormat("alt: %.2f", gm.plane.t.pos.y), 10, 20, 12);
+    text_col.DrawText(TextFormat("pos: %.2f %.2f", gm.plane.t.pos.x, gm.plane.t.pos.z), 10, 30, 12);
     text_col.DrawText(TextFormat("chk: %d %d %d", chunk_x, chunk_y, chunk_idx), 10, 40, 12);
 
     text_col.DrawText(TextFormat("seeds: %d", gm.inv.slots[0].num), 100, 100, 12);
