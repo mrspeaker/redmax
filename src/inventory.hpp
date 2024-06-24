@@ -1,22 +1,21 @@
 #ifndef INVENTORY_HPP
 #define INVENTORY_HPP
 
+#import <item.hpp>
+
 namespace rm {
 
-enum class slot_type {
-    NONE,
-    SEEDS,
-};
-
 struct slot {
-    slot_type type=slot_type::NONE;
+    item_type type=item_type::NONE;
     bool stackable=false;
     int num=0;
 };
 
 struct inventory {
-    rm::slot slots[5];
-    void add_item(slot_type type, int amount);
+    int cur_slot=0;
+    static const int MAX_SLOTS = 5;
+    rm::slot slots[MAX_SLOTS];
+    void add_item(item_type type, int amount);
 };
 
 }; // namespace

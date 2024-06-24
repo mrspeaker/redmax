@@ -7,10 +7,10 @@ namespace rm {
 
 class trans {
 public:
-    raylib::Matrix transform;
-    raylib::Vector3 pos;
-    raylib::Vector3 rot;
-    raylib::Vector3 scale;
+    raylib::Matrix transform{};
+    raylib::Vector3 pos{0, 0, 0};
+    raylib::Vector3 rot{0, 0, 0};
+    raylib::Vector3 scale{1, 1, 1};
 
     trans()=default;
 };

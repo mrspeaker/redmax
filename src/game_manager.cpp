@@ -6,7 +6,7 @@
 void rm::game_manager::on_notify(game_event event, float x, float y, float z) {
     switch(event) {
     case game_event::SPAWN:
-        auto p = rm::pickup();
+        auto p = rm::pickup(GetRandomValue(0, 2) == 0 ? item_type::GRASS : item_type::TURRET);
         p.t.pos.x = x;
         p.t.pos.y = 1.5;
         p.t.pos.z = z;
@@ -45,9 +45,15 @@ rm::game_manager::game_manager():terrain(128.0), inv{} {
     }
 
     // pickup for seeds
-    auto p = rm::pickup();
+    auto p = rm::pickup(rm::item_type::GRASS);
     p.t.pos.x = 64.0;
     p.t.pos.z = 64.0;
+    p.t.pos.y = 14.0;
+    pickups.push_back(p);
+
+    p = rm::pickup(rm::item_type::TURRET);
+    p.t.pos.x = 96.0;
+    p.t.pos.z = 96.0;
     p.t.pos.y = 14.0;
     pickups.push_back(p);
 
@@ -61,6 +67,8 @@ void rm::game_manager::update(float dt) {
     auto is_right = IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT) || xo > 0.5;
     auto is_up = IsKeyDown(KEY_W) || IsKeyDown(KEY_UP) || yo < -0.5;
     auto is_down = IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN) || yo > 0.5;
+    if (IsKeyDown(KEY_ONE)) inv.cur_slot = 0;
+    if (IsKeyDown(KEY_TWO)) inv.cur_slot = 1;
 
     auto is_action = IsKeyDown(KEY_SPACE);
 
@@ -129,7 +137,7 @@ void rm::game_manager::update(float dt) {
     std::erase_if(pickups, [&](rm::pickup& p) {
         auto xz_dist = raylib::Vector2(p.t.pos.x, p.t.pos.z).Distance(plane_xz);
         if (xz_dist < 5.0f && std::fabs(pos.y - p.t.pos.y) < 20.0) {
-            inv.add_item(slot_type::SEEDS, 5);
+            inv.add_item(p.type, 2);
             return true;
         }
         return false;
@@ -141,18 +149,25 @@ void rm::game_manager::update(float dt) {
         auto landed = s.state == rm::seed_state::LANDED;
         if (landed) {
             auto t = terrain.get_tile_from_pos(s.t.pos.x, s.t.pos.z);
-            if (t->type != 2 && t->type != 3) {
-                t->next_type = 2;
+            if (s.type == item_type::GRASS) {
+                if (t->type != 2 && t->type != 3) {
+                    t->next_type = 2;
+                }
+            }
+            if (s.type == item_type::TURRET) {
+                t->next_type = 1;
+                // Spawn turret.
             }
         }
         return landed;
     });
 
     // Fire seeds, if you gottem
-    if (is_action && inv.slots[0].num > 0 && plane.flying() && !seeded) {
+    if (is_action && inv.slots[inv.cur_slot].num > 0 && plane.flying() && !seeded) {
         seeded = true;
-        inv.slots[0].num-=1;
+        inv.slots[inv.cur_slot].num-=1;
         auto seed = rm::seed();
+        seed.type = inv.slots[inv.cur_slot].type;
         seed.t.pos.x = pos.x;
         seed.t.pos.y = pos.y;
         seed.t.pos.z = pos.z;

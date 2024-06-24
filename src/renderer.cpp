@@ -225,12 +225,18 @@ void rm::renderer::render(game_manager &gm) {
 
     // pickups
     for (const auto &p : gm.pickups) {
-        p.t.pos.DrawCube(2.0f, 2.0f, 2.0f, GREEN);
+        auto c = WHITE;
+        if (p.type == rm::item_type::GRASS) c = GREEN;
+        if (p.type == rm::item_type::TURRET) c = RED;
+        p.t.pos.DrawCube(2.0f, 2.0f, 2.0f, c);
     }
 
     // seeds
     for (const auto &s : gm.seeds) {
-        s.t.pos.DrawCube(1.0f, 1.0f, 1.0f, ORANGE);
+        auto c = WHITE;
+        if (s.type == rm::item_type::GRASS) c = GREEN;
+        if (s.type == rm::item_type::TURRET) c = RED;
+        s.t.pos.DrawCube(1.0f, 1.0f, 1.0f, c);
     }
 
     gm.camera.cam.EndMode();
@@ -247,7 +253,10 @@ void rm::renderer::render(game_manager &gm) {
     text_col.DrawText(TextFormat("pos: %.2f %.2f", gm.plane.t.pos.x, gm.plane.t.pos.z), 10, 30, 12);
     text_col.DrawText(TextFormat("chk: %d %d %d", chunk_x, chunk_y, chunk_idx), 10, 40, 12);
 
-    text_col.DrawText(TextFormat("seeds: %d", gm.inv.slots[0].num), 100, 100, 12);
+    for(int i = 0; i < rm::inventory::MAX_SLOTS; i++) {
+        text_col.DrawText(TextFormat("%d: %d", i + 1, gm.inv.slots[i].num), 100, 100 + i * 20,
+                          i == gm.inv.cur_slot ? 14 : 10);
+    }
 
     EndDrawing();
 };

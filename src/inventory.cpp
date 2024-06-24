@@ -1,6 +1,19 @@
 #include <inventory.hpp>
 
-void rm::inventory::add_item(slot_type slot_type, int amount) {
-    slots[0].type = slot_type;
-    slots[0].num += amount;
+void rm::inventory::add_item(item_type type, int amount) {
+    auto idx = -1;
+    for (int i = 0; i < MAX_SLOTS; i++) {
+        if (slots[i].type == type) {
+            idx = i;
+            break;
+        }
+        if (idx == -1 && slots[i].type == item_type::NONE) {
+            idx = i;
+        }
+    }
+    if (idx == -1) {
+        return;
+    }
+    slots[idx].type = type;
+    slots[idx].num += amount;
 }

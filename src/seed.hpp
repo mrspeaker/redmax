@@ -2,12 +2,9 @@
 #define SEED_HPP
 
 #import <trans.hpp>
+#import <item.hpp>
 
 namespace rm {
-
-enum class seed_type {
-    GRASS
-};
 
 enum class seed_state {
     FALLING,
@@ -16,7 +13,7 @@ enum class seed_state {
 
 struct seed {
     rm::trans t;
-    rm::seed_type type;
+    rm::item_type type;
     rm::seed_state state;
     void update(float dt);
 };
