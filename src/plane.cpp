@@ -2,9 +2,7 @@
 
 #include <raylib-cpp.hpp>
 
-rm::plane::plane() {
-    speed = 0.0;
-}
+rm::plane::plane()=default;
 
 void rm::plane::update(float dt, bool is_left, bool is_right, bool is_up, bool is_down) {
 

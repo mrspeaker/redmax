@@ -1,9 +1,10 @@
 #ifndef CHUNK_HPP
 #define CHUNK_HPP
 
+#include <raylib-cpp.hpp>
+
 #import <vector>
-#import <Vector3.hpp>
-#import <memory>
+// #import <memory>
 #import <tile.hpp>
 #import <observer.hpp>
 

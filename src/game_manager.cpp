@@ -1,11 +1,7 @@
-#include "Vector2.hpp"
 #include <game_manager.hpp>
-#include <iostream>
-#include <raylib-cpp.hpp>
 #include <godzilla.hpp>
 #include <vector>
 #include <algorithm>
-#include <iostream>
 
 void rm::game_manager::on_notify(game_event event, float x, float y, float z) {
     switch(event) {
@@ -19,7 +15,10 @@ void rm::game_manager::on_notify(game_event event, float x, float y, float z) {
     }
 }
 
-rm::game_manager::game_manager():terrain(128.0) {
+rm::game_manager::game_manager():terrain(128.0), inv{} {
+    plane.pos.x += 20.0;
+
+    // some towers
     for (int j = 0; j < 3; j++) {
         for (int i = 0; i < 4; i++) {
             rm::tower t{};
@@ -29,13 +28,13 @@ rm::game_manager::game_manager():terrain(128.0) {
             towers.push_back(t);
         }
     }
-    plane.pos.x += 20.0;
 
-    // Hook up observers
+    // Hook up observers for tile events
     for (auto& ch : terrain.chunks) {
         ch.add_observer(this);
     }
 
+    // Some godzillas
     for (int j = 0; j < 20; j++) {
         auto g = rm::godzilla{};
         g.t.pos.x = GetRandomValue(-400, 400) * 1.0f;
@@ -45,12 +44,12 @@ rm::game_manager::game_manager():terrain(128.0) {
         godzillas.push_back(g);
     }
 
+    // pickup for seeds
     auto p = rm::pickup();
     p.t.pos.x = 64.0;
     p.t.pos.z = 64.0;
     p.t.pos.y = 14.0;
     pickups.push_back(p);
-
 
 };
 
@@ -66,18 +65,22 @@ void rm::game_manager::update(float dt) {
     auto is_action = IsKeyDown(KEY_SPACE);
 
     plane.update(dt, is_left, is_right, is_up, is_down);
+
+    // What tile are we over?
     auto tile = terrain.get_tile_from_pos(plane.pos.x, plane.pos.z);
     if (tile != last_plane_tile) {
         seeded = false;
         last_plane_tile = tile;
     }
 
+    // Wrap plane "seamlessly"
     const auto size = 300.0;
     if (plane.pos.x < -size) plane.pos.x += size * 2.0;
     if (plane.pos.x > size) plane.pos.x -= size * 2.0;
     if (plane.pos.z < -size) plane.pos.z += size * 2.0;
     if (plane.pos.z > size) plane.pos.z -= size * 2.0;
 
+    // Cam update
     camera.cam.position.x = plane.pos.x;
     camera.cam.position.z = plane.pos.z - 50;
     auto cyo = (std::clamp(plane.pos.y, 20.0f, 50.0f) - 20.0f) / 30.0f;
@@ -85,6 +88,7 @@ void rm::game_manager::update(float dt) {
     camera.cam.target.x = plane.pos.x;
     camera.cam.target.z = plane.pos.z;
 
+    // Godzillaz
     for (auto& g : godzillas) {
         g.update(dt);
         auto dist = g.t.pos.Distance(plane.pos);
@@ -105,6 +109,7 @@ void rm::game_manager::update(float dt) {
         if (g.t.pos.z > 400.0) g.t.pos.z -= 800.0;
     }
 
+    // cellular automata updates
     terrain.update(dt);
 
     // missiles
@@ -142,7 +147,7 @@ void rm::game_manager::update(float dt) {
         return landed;
     });
 
-    // Fire seeds
+    // Fire seeds, if you gottem
     if (is_action && inv.slots[0].num > 0 && plane.flying() && !seeded) {
         seeded = true;
         inv.slots[0].num-=1;

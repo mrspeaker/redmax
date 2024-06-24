@@ -16,7 +16,8 @@ struct slot {
 
 struct inventory {
     rm::slot slots[5];
-    void add_item (slot_type type, int amount);
+    void add_item(slot_type type, int amount);
+    inventory()=default;
 };
 
 }; // namespace

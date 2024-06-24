@@ -1,4 +1,3 @@
-#include <raylib-cpp.hpp>
 #include <camera.hpp>
 
 rm::camera::camera() :
