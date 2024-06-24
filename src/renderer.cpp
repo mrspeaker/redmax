@@ -238,10 +238,8 @@ void rm::renderer::render(game_manager &gm) {
     }
 
     runman.UpdateAnimation(anims[0], frame++);
-    runman.Draw(raylib::Vector3(30.0, 2.0, 64.0), 1.0f, BLUE);
-
-    runman.UpdateAnimation(anims[1], frame);
-    runman.Draw(raylib::Vector3(40.0, 2.0, 64.0), 1.0f, BLUE);
+    runman.Draw(raylib::Vector3(30.0, 0.0, 64.0), 3.0f, BLUE);
+    runman.Draw(raylib::Vector3(40.0, 0.0, 64.0), 3.0f, BLUE);
 
     // seeds
     for (const auto &s : gm.seeds) {
