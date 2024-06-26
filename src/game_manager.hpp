@@ -1,18 +1,19 @@
 #ifndef GAME_MANAGER_HPP
 #define GAME_MANAGER_HPP
 
-#include <raylib-cpp.hpp>
-#include <plane.hpp>
-#include <tower.hpp>
 #include <camera.hpp>
-#include <terrain.hpp>
-#include <missile.hpp>
 #include <godzilla.hpp>
-#include <seed.hpp>
-#include <pickup.hpp>
 #include <inventory.hpp>
-#include <vector>
+#include <missile.hpp>
 #include <observer.hpp>
+#include <peep.hpp>
+#include <plane.hpp>
+#include <pickup.hpp>
+#include <raylib-cpp.hpp>
+#include <seed.hpp>
+#include <tower.hpp>
+#include <terrain.hpp>
+#include <vector>
 
 namespace rm {
 
@@ -28,6 +29,7 @@ public:
     std::vector<rm::missile> missiles;
     std::vector<rm::seed> seeds;
     std::vector<rm::pickup> pickups;
+    std::vector<rm::peep> peeps;
 
     rm::tile* last_plane_tile;
     bool seeded=false;

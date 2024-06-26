@@ -31,6 +31,10 @@ public:
     unsigned int animIndex = 0;
     ModelAnimation *anims;
 
+    int mygod_frame;
+    int mygod_animsCount = 0;
+    ModelAnimation *mygod_anims;
+
     Color *pixels;
 
     renderer(game_manager &gm);

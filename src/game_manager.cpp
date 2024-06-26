@@ -57,6 +57,15 @@ rm::game_manager::game_manager():terrain(128.0), inv{} {
     p.t.pos.y = 14.0;
     pickups.push_back(p);
 
+    for (int i = 0; i < 20; i++) {
+        auto p = rm::peep{};
+        p.t.pos.x = GetRandomValue(-400, 400) * 1.0f;
+        p.t.pos.z = GetRandomValue(-400, 400) * 1.0f;
+        p.t.pos.y = 0.0;
+        p.t.rot.y = (i / 20.f) * 360.f;
+        peeps.push_back(p);
+    }
+
 };
 
 void rm::game_manager::update(float dt) {
@@ -96,6 +105,11 @@ void rm::game_manager::update(float dt) {
     camera.cam.position.y = (plane.speed + 10) / 50.0 * (100.0 + cyo * 200.0);
     camera.cam.target.x = pos.x;
     camera.cam.target.z = pos.z;
+
+    // Peeps
+    for (auto& p : peeps) {
+        p.update(dt);
+    }
 
     // Godzillaz
     for (auto& g : godzillas) {

@@ -20,7 +20,7 @@ rm::renderer::renderer(game_manager &gm)
       tile_shader("res/lighting.vs", "res/tiles.fs"),
       godzilla("res/godzilla.png") {
 
-    ///SetConfigFlags(FLAG_MSAA_4X_HINT);
+    SetConfigFlags(FLAG_MSAA_4X_HINT);
 
     for (int i = 0; i < plane.materialCount; i++) {
         plane.materials[i].shader = light_shader;
@@ -43,6 +43,7 @@ rm::renderer::renderer(game_manager &gm)
 
     //anims = raylib::ModelAnimation::Loa d("res/runman.glb");
     anims = LoadModelAnimations("res/runman.glb", &animsCount);
+    mygod_anims = LoadModelAnimations("res/mygod.glb", &mygod_animsCount);
 
     Texture2D tex = LoadTexture("res/terrain.png");
     mountain.materials[1].maps[0].texture = tex;
@@ -206,7 +207,9 @@ void rm::renderer::render(game_manager &gm) {
 
     mountain.Draw(Vector3{0.0, 1.0, 200.0}, 1.0f, RAYWHITE);
 
+    mygod_frame = (mygod_frame + 1) % mygod_animsCount;
     for (auto& g : gm.godzillas) {
+        mygod.UpdateAnimation(mygod_anims[0], frame);
         mygod.Draw(
                g.t.pos,
                Vector3{0.0f, 1.0f, 0.0},
@@ -240,13 +243,14 @@ void rm::renderer::render(game_manager &gm) {
 
     auto anim = anims[animIndex];
     frame = (frame + 1) % anim.frameCount;
-    runman.UpdateAnimation(anim, frame);
-    runman.Draw(raylib::Vector3(40.0, 1.5, 40.0), 3.0f, RAYWHITE);
-
-
-    auto frame2 = (frame + 5) % anim.frameCount;
-    runman.UpdateAnimation(anim, frame2);
-    runman.Draw(raylib::Vector3(42.0, 1.5, 40.0), 3.0f, RAYWHITE);
+    for (auto& p : gm.peeps) {
+        runman.UpdateAnimation(anim, frame);
+        runman.Draw(
+               p.t.pos,
+               Vector3{0.0f, 1.0f, 0.0},
+               p.t.rot.y,
+               Vector3{1.0,1.0,1.0}, RAYWHITE);
+    }
 
     // seeds
     for (const auto &s : gm.seeds) {
