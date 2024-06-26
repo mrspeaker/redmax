@@ -27,7 +27,7 @@ public:
     raylib::Texture2D godzilla;
 
     int frame=0;
-    unsigned int animsCount = 0;
+    int animsCount = 0;
     unsigned int animIndex = 0;
     ModelAnimation *anims;
 

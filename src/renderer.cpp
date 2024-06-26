@@ -20,7 +20,7 @@ rm::renderer::renderer(game_manager &gm)
       tile_shader("res/lighting.vs", "res/tiles.fs"),
       godzilla("res/godzilla.png") {
 
-    SetConfigFlags(FLAG_MSAA_4X_HINT);
+    ///SetConfigFlags(FLAG_MSAA_4X_HINT);
 
     for (int i = 0; i < plane.materialCount; i++) {
         plane.materials[i].shader = light_shader;
@@ -32,7 +32,7 @@ rm::renderer::renderer(game_manager &gm)
         tower.materials[i].shader = light_shader;
     }
     for (int i = 0; i < runman.materialCount; i++) {
-        //        runman.materials[i].shader = light_shader;
+        runman.materials[i].shader = light_shader;
     }
     for (int i = 0; i < mountain.materialCount; i++) {
         mountain.materials[i].shader = light_shader;
@@ -240,17 +240,13 @@ void rm::renderer::render(game_manager &gm) {
 
     auto anim = anims[animIndex];
     frame = (frame + 1) % anim.frameCount;
-    UpdateModelAnimation(runman, anim, frame);
-    runman.Draw(raylib::Vector3(40.0, 6.0, 40.0), 10.0f, RAYWHITE);
-    /*
-      runman.UpdateAnimation(anims[0], frame++);
-    runman.Draw(raylib::Vector3(30.0, 0.0, 64.0), 3.0f, BLUE);
-    runman.Draw(
-               raylib::Vector3(40.0, 3.0, 64.0),
-               Vector3{0.0f, 1.0f, 0.0},
-               GetTime() * 50.0,
-               Vector3{3.0,3.0,3.0}, RAYWHITE);
-    */
+    runman.UpdateAnimation(anim, frame);
+    runman.Draw(raylib::Vector3(40.0, 1.5, 40.0), 3.0f, RAYWHITE);
+
+
+    auto frame2 = (frame + 5) % anim.frameCount;
+    runman.UpdateAnimation(anim, frame2);
+    runman.Draw(raylib::Vector3(42.0, 1.5, 40.0), 3.0f, RAYWHITE);
 
     // seeds
     for (const auto &s : gm.seeds) {
