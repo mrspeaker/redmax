@@ -32,7 +32,7 @@ rm::renderer::renderer(game_manager &gm)
         tower.materials[i].shader = light_shader;
     }
     for (int i = 0; i < runman.materialCount; i++) {
-        runman.materials[i].shader = light_shader;
+        //        runman.materials[i].shader = light_shader;
     }
     for (int i = 0; i < mountain.materialCount; i++) {
         mountain.materials[i].shader = light_shader;
@@ -41,7 +41,8 @@ rm::renderer::renderer(game_manager &gm)
         mygod.materials[i].shader = light_shader;
     }
 
-    anims = raylib::ModelAnimation::Load("res/runman.glb");
+    //anims = raylib::ModelAnimation::Loa d("res/runman.glb");
+    anims = LoadModelAnimations("res/runman.glb", &animsCount);
 
     Texture2D tex = LoadTexture("res/terrain.png");
     mountain.materials[1].maps[0].texture = tex;
@@ -237,9 +238,10 @@ void rm::renderer::render(game_manager &gm) {
         p.t.pos.DrawCube(2.0f, 2.0f, 2.0f, c);
     }
 
-    runman.UpdateAnimation(anims[0], frame++);
-    runman.Draw(raylib::Vector3(30.0, 0.0, 64.0), 3.0f, BLUE);
-    runman.Draw(raylib::Vector3(40.0, 0.0, 64.0), 3.0f, BLUE);
+    auto anim = anims[animIndex];
+    frame = (frame + 1) % anim.frameCount;
+    UpdateModelAnimation(runman, anim, frame);
+    runman.Draw(raylib::Vector3(40.0, 6.0, 40.0), 10.0f, RAYWHITE);
 
     // seeds
     for (const auto &s : gm.seeds) {

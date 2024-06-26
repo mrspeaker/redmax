@@ -25,9 +25,11 @@ public:
     raylib::Shader tile_shader;
 
     raylib::Texture2D godzilla;
-    std::vector<raylib::ModelAnimation> anims;
-    int frame=0;
 
+    int frame=0;
+    unsigned int animsCount = 0;
+    unsigned int animIndex = 0;
+    ModelAnimation *anims;
 
     Color *pixels;
 
