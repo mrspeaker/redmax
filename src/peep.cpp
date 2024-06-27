@@ -9,7 +9,7 @@ rm::peep::peep() {
 void rm::peep::update(float dt) {
   phys.integrate(dt, &t);
 
-  if (GetRandomValue(0, 100) == 1) {
-      t.rot.y = t.rot.y + GetRandomValue(-45, 45) * DEG2RAD;
+  if (GetRandomValue(0, 50) == 1) {
+      t.rot.y = t.rot.y + GetRandomValue(0, 45) * DEG2RAD;
   }
 }
