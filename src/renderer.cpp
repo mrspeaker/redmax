@@ -7,6 +7,10 @@
 #define RLIGHTS_IMPLEMENTATION
 #include "./rlights.h"
 
+const Vector3 UP = Vector3{0.f, 1.0f, 0.f};
+const Vector3 ZERO = Vector3{0.f, 0.f, 0.f};
+const Vector3 ONE = Vector3{1.f, 1.0f, 1.f};
+
 rm::renderer::renderer(game_manager &gm)
     : window(screenWidth, screenHeight, "RedMax"),
       text_col(raylib::Color::White()),
@@ -16,6 +20,7 @@ rm::renderer::renderer(game_manager &gm)
       copse("res/copse.glb"),
       mountain("res/mountain.glb"),
       mygod("res/mygod.glb"),
+      missile("res/missile.glb"),
       light_shader("res/lighting.vs", "res/lighting.fs"),
       tile_shader("res/lighting.vs", "res/tiles.fs"),
       godzilla("res/godzilla.png") {
@@ -40,6 +45,9 @@ rm::renderer::renderer(game_manager &gm)
     }
     for (int i = 0; i < mygod.materialCount; i++) {
         mygod.materials[i].shader = light_shader;
+    }
+    for (int i = 0; i < mygod.materialCount; i++) {
+        missile.materials[i].shader = light_shader;
     }
 
     Texture2D tex = LoadTexture("res/terrain.png");
@@ -211,7 +219,7 @@ void rm::renderer::render(game_manager &gm) {
         mygod.UpdateAnimation(mygod_anims[g.anim_num], g.anim_frame);
         mygod.Draw(
                g.t.pos,
-               Vector3{0.0f, 1.0f, 0.0},
+               UP,
                g.t.rot.y,
                Vector3{2.0,2.0,2.0}, RAYWHITE);
     }
@@ -229,7 +237,9 @@ void rm::renderer::render(game_manager &gm) {
 
     // missiles
     for (const auto &m : gm.missiles) {
-        m.t.pos.DrawCube(2.0f, 2.0f, 2.0f, YELLOW);
+        missile.Draw(m.t.pos, UP, m.t.rot.y * RAD2DEG, ONE, RAYWHITE);
+        auto c = GetRandomValue(0, 1) == 1 ? ORANGE : YELLOW;
+        m.t.pos.Add(Vector3{sinf(m.t.rot.y) * -1.5f, 0.0f, cosf(m.t.rot.y)  * -1.5f}).DrawSphere(0.5f, c);
     }
 
     // pickups

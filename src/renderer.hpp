@@ -18,6 +18,7 @@ public:
     raylib::Model mountain;
     raylib::Model grid;
     raylib::Model mygod;
+    raylib::Model missile;
     Light light;
 
     raylib::Shader light_shader;
