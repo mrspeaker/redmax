@@ -59,10 +59,10 @@ rm::game_manager::game_manager():terrain(128.0), inv{} {
 
     for (int i = 0; i < 20; i++) {
         auto p = rm::peep{};
-        p.t.pos.x = GetRandomValue(-400, 400) * 1.0f;
-        p.t.pos.z = GetRandomValue(-400, 400) * 1.0f;
+        p.t.pos.x = GetRandomValue(-50, 50) * 1.0f;
+        p.t.pos.z = GetRandomValue(-50, 50) * 1.0f;
         p.t.pos.y = 0.0;
-        p.t.rot.y = (i / 20.f) * 360.f;
+        p.t.rot.y = GetRandomValue(0, 360) * DEG2RAD;
         peeps.push_back(p);
     }
 
@@ -119,7 +119,7 @@ void rm::game_manager::update(float dt) {
             g.cooldown = 0;
             auto m = rm::missile(&pos);
             m.t.pos.x = g.t.pos.x;
-            m.t.pos.y = 1.0f;
+            m.t.pos.y = 10.0f;
             m.t.pos.z = g.t.pos.z;
             m.phys.acc.z = 0.1f;
             m.t.rot.y = 0.0f;

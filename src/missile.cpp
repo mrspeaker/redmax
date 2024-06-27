@@ -20,7 +20,6 @@ bool rm::missile::update(float dt) {
     }
     phys.integrate(dt, &t);
 
-
     life -= dt;
     return life < 0.0;
 }

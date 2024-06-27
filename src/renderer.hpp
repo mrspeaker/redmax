@@ -4,7 +4,6 @@
 #include <raylib-cpp.hpp>
 #include <game_manager.hpp>
 #include "./rlights.h"
-#include <memory>
 
 namespace rm {
 
@@ -26,14 +25,10 @@ public:
 
     raylib::Texture2D godzilla;
 
-    int frame=0;
-    int animsCount = 0;
-    unsigned int animIndex = 0;
-    ModelAnimation *anims;
-
-    int mygod_frame;
-    int mygod_animsCount = 0;
-    ModelAnimation *mygod_anims;
+    int runman_frame=0;
+    std::vector<raylib::ModelAnimation> runman_anims;
+    int mygod_frame=0;
+    std::vector<raylib::ModelAnimation> mygod_anims;
 
     Color *pixels;
 
