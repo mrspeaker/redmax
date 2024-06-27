@@ -206,9 +206,9 @@ void rm::renderer::render(game_manager &gm) {
 
     mountain.Draw(Vector3{0.0, 1.0, 200.0}, 1.0f, RAYWHITE);
 
-    mygod_frame = (mygod_frame + 1) % mygod_anims[0].frameCount;
     for (auto& g : gm.godzillas) {
-        mygod.UpdateAnimation(mygod_anims[0], mygod_frame);
+        g.anim_frame = (g.anim_frame + 1) % mygod_anims[g.anim_num].frameCount;
+        mygod.UpdateAnimation(mygod_anims[g.anim_num], g.anim_frame);
         mygod.Draw(
                g.t.pos,
                Vector3{0.0f, 1.0f, 0.0},
@@ -240,9 +240,9 @@ void rm::renderer::render(game_manager &gm) {
         p.t.pos.DrawCube(2.0f, 2.0f, 2.0f, c);
     }
 
-    runman_frame = (runman_frame + 2) % runman_anims[0].frameCount;
     for (auto& p : gm.peeps) {
-        runman.UpdateAnimation(runman_anims[0], runman_frame);
+        p.anim_frame = (p.anim_frame + 1) % runman_anims[p.anim_num].frameCount;
+        runman.UpdateAnimation(runman_anims[p.anim_num], p.anim_frame);
         runman.Draw(
                p.t.pos,
                Vector3{0.0f, 1.0f, 0.0},

@@ -6,13 +6,22 @@
 
 namespace rm {
 
+enum class peep_state {
+    IDLE,
+    WALK
+};
+
 class peep {
 public:
-    rm::trans t;
-    rm::phys phys;
-
     peep();
     void update(float dt);
+
+    rm::trans t;
+    rm::phys phys;
+    peep_state state=peep_state::IDLE;
+    float state_time=0.0;
+    int anim_num=0;
+    int anim_frame=0;
 };
 
 }; // namespace rm

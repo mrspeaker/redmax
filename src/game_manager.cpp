@@ -116,7 +116,7 @@ void rm::game_manager::update(float dt) {
         g.update(dt);
         auto dist = g.t.pos.Distance(pos);
         if (dist < 100.0f && g.can_fire()) {
-            g.cooldown = 0;
+            g.fire();
             auto m = rm::missile(&pos);
             m.t.pos.x = g.t.pos.x;
             m.t.pos.y = 10.0f;
