@@ -1,6 +1,7 @@
 * Redmax
 
 ** Setup
+first time, or when changing raylib version - use `make setup`
 
 ```console
 $ make setup
