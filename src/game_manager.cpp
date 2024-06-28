@@ -1,4 +1,6 @@
 #include "item.hpp"
+#include "math.hpp"
+#include "raylib.h"
 #include <game_manager.hpp>
 #include <godzilla.hpp>
 #include <vector>
@@ -8,9 +10,7 @@ void rm::game_manager::on_notify(game_event event, float x, float y, float z) {
     switch(event) {
     case game_event::SPAWN:
         auto p = rm::pickup(GetRandomValue(0, 2) == 0 ? item_type::GRASS : item_type::TURRET);
-        p.t.pos.x = x;
-        p.t.pos.y = 1.5;
-        p.t.pos.z = z;
+        rm::vec3_set(p.t.pos, Vector3{x, 1.5, z});
         pickups.push_back(p);
         break;
     }
@@ -47,15 +47,11 @@ rm::game_manager::game_manager():terrain(128.0), inv{} {
 
     // pickup for seeds
     auto p = rm::pickup(rm::item_type::GRASS);
-    p.t.pos.x = 64.0;
-    p.t.pos.z = 64.0;
-    p.t.pos.y = 14.0;
+    rm::vec3_set(p.t.pos, Vector3{64.0,14.0, 64.0});
     pickups.push_back(p);
 
     p = rm::pickup(rm::item_type::TURRET);
-    p.t.pos.x = 96.0;
-    p.t.pos.z = 96.0;
-    p.t.pos.y = 14.0;
+    rm::vec3_set(p.t.pos, Vector3{96.0,14.0, 96.0});
     pickups.push_back(p);
 
     for (int i = 0; i < 20; i++) {
@@ -109,21 +105,25 @@ void rm::game_manager::update(float dt) {
     camera.cam.target.z = pos.z;
 
     // Peeps
-    for (auto& p : peeps) {
-        p.update(dt);
-        auto dist = p.t.pos.Distance(pos);
-        if (dist < 4.0f) {
-            // lol, "pickup" people == send them far away xD
-            p.t.pos.x = -10000.0;
-            inv.add_item(item_type::PERSON, 1);
-        }
-        if (p.t.pos.x > -1000) {
-            auto t = terrain.get_tile_from_pos(p.t.pos.x, p.t.pos.z);
-            if (t != nullptr && t->type == 0) {
-                t->next_type = 2;
-            }
-        }
-
+    for (auto &p : peeps) {
+      if (p.state == peep_state::INACTIVE) {
+          continue;
+      }
+      p.update(dt);
+      auto dist = p.t.pos.Distance(pos);
+      if (dist < 4.0f) {
+          // lol, "pickup" people == send them far away xD
+          p.t.pos.x = -10000.0;
+          p.state = peep_state::INACTIVE;
+          inv.add_item(item_type::PERSON, 1);
+          continue;
+      }
+      if (p.state == peep_state::WALK) {
+          auto t = terrain.get_tile_from_pos(p.t.pos.x, p.t.pos.z);
+          if (t != nullptr && t->type == 0) {
+              t->next_type = 2;
+          }
+      }
     }
 
     // Godzillaz
@@ -191,11 +191,12 @@ void rm::game_manager::update(float dt) {
             }
             if (s.type == item_type::PERSON) {
                 for (auto& p : peeps) {
-                  if (p.t.pos.x < -1000.0) {
-                    p.t.pos.x = s.t.pos.x;
-                    p.t.pos.z = s.t.pos.z;
-                    break;
-                  }
+                    if (p.state == peep_state::INACTIVE) {
+                        p.t.pos.x = s.t.pos.x;
+                        p.t.pos.z = s.t.pos.z;
+                        p.state = peep_state::IDLE;
+                        break;
+                    }
                 }
             }
         }
@@ -208,9 +209,7 @@ void rm::game_manager::update(float dt) {
         inv.slots[inv.cur_slot].num-=1;
         auto seed = rm::seed();
         seed.type = inv.slots[inv.cur_slot].type;
-        seed.t.pos.x = pos.x;
-        seed.t.pos.y = pos.y;
-        seed.t.pos.z = pos.z;
+        rm::vec3_set(seed.t.pos, pos);
         seeds.push_back(seed);
     }
 }
