@@ -1,3 +1,4 @@
+#include "item.hpp"
 #include <game_manager.hpp>
 #include <godzilla.hpp>
 #include <vector>
@@ -109,22 +110,30 @@ void rm::game_manager::update(float dt) {
     // Peeps
     for (auto& p : peeps) {
         p.update(dt);
+        auto dist = p.t.pos.Distance(pos);
+        if (dist < 4.0f) {
+            // lol, "pickup" people == send them far away xD
+            p.t.pos.x = -10000.0;
+            inv.add_item(item_type::PERSON, 1);
+        }
     }
 
     // Godzillaz
     for (auto& g : godzillas) {
         g.update(dt);
-        auto dist = g.t.pos.Distance(pos);
-        if (dist < 100.0f && g.can_fire()) {
-            g.fire();
-            auto m = rm::missile(&pos);
-            m.t.pos.x = g.t.pos.x;
-            m.t.pos.y = 10.0f;
-            m.t.pos.z = g.t.pos.z;
-            m.phys.acc.z = 0.1f;
-            m.t.rot.y = 0.0f;
-            m.life = 10.0;
-            missiles.push_back(m);
+        if (g.can_fire()) {
+            auto dist = g.t.pos.Distance(pos);
+            if (dist < 100.0f) {
+                g.fire();
+                auto m = rm::missile(&pos);
+                m.t.pos.x = g.t.pos.x;
+                m.t.pos.y = 10.0f;
+                m.t.pos.z = g.t.pos.z;
+                m.phys.acc.z = 0.1f;
+                m.t.rot.y = 0.0f;
+                m.life = 10.0;
+                missiles.push_back(m);
+            }
         }
         if (g.t.pos.x < -400.0) g.t.pos.x += 800.0;
         if (g.t.pos.x > 400.0) g.t.pos.x -= 800.0;
@@ -171,6 +180,15 @@ void rm::game_manager::update(float dt) {
             if (s.type == item_type::TURRET) {
                 t->next_type = 1;
                 // Spawn turret.
+            }
+            if (s.type == item_type::PERSON) {
+                for (auto& p : peeps) {
+                  if (p.t.pos.x < -1000.0) {
+                    p.t.pos.x = s.t.pos.x;
+                    p.t.pos.z = s.t.pos.z;
+                    break;
+                  }
+                }
             }
         }
         return landed;

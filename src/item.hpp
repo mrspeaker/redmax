@@ -3,7 +3,8 @@ namespace rm {
 enum class item_type {
   NONE,
   GRASS,
-  TURRET
+  TURRET,
+  PERSON
 };
 
 }; // namespace rn

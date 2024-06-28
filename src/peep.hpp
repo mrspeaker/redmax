@@ -18,6 +18,7 @@ public:
 
     rm::trans t;
     rm::phys phys;
+
     peep_state state=peep_state::IDLE;
     float state_time=0.0;
     int anim_num=0;
