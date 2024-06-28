@@ -24,6 +24,7 @@ rm::tile* rm::terrain::get_tile_from_pos(float x, float y) {
     auto chunk_y = static_cast<int>(std::floor(y / chunk_size));
     auto chunk_idx = (chunk_y + height_in_chunks / 2) * width_in_chunks + (chunk_x + width_in_chunks / 2);
     auto chunk = &chunks[chunk_idx];
+    //if(chunk == nullptr) return nullptr; // TODO: shouldn't need this, but do!
 
     int tile_x = static_cast<int>((std::fmod(std::fabs(x),chunk_size) / chunk_size) * 16);
     if (x < 0) {

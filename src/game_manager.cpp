@@ -79,6 +79,7 @@ void rm::game_manager::update(float dt) {
     auto is_down = IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN) || yo > 0.5;
     if (IsKeyDown(KEY_ONE)) inv.cur_slot = 0;
     if (IsKeyDown(KEY_TWO)) inv.cur_slot = 1;
+    if (IsKeyDown(KEY_THREE)) inv.cur_slot = 2;
 
     auto is_action = IsKeyDown(KEY_SPACE);
 
@@ -116,6 +117,13 @@ void rm::game_manager::update(float dt) {
             p.t.pos.x = -10000.0;
             inv.add_item(item_type::PERSON, 1);
         }
+        if (p.t.pos.x > -1000) {
+            auto t = terrain.get_tile_from_pos(p.t.pos.x, p.t.pos.z);
+            if (t != nullptr && t->type == 0) {
+                t->next_type = 2;
+            }
+        }
+
     }
 
     // Godzillaz
