@@ -17,6 +17,12 @@
 
 namespace rm {
 
+enum class player_state {
+    FLYING,
+    LANDED,
+
+};
+
 class game_manager : observer {
 public:
     rm::plane plane;
@@ -33,6 +39,8 @@ public:
 
     rm::tile* last_plane_tile;
     bool seeded=false;
+
+    rm::player_state player_state;
 
     game_manager();
     void update(float dt);
